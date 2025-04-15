@@ -17,11 +17,16 @@ const SidebarItem = (props: SidebarItemsProps) => {
         size={props.iconSize}
         className={cn(!props.isShrinked ? "" : "", "group-hover:text-gray-50")}
       />
-      {!props.isShrinked && (
-        <span className={cn("capitalize text-2xl group-hover:text-gray-50")}>
-          {props.name}
-        </span>
-      )}
+      <span
+        className={cn(
+          "capitalize text-2xl group-hover:text-gray-50 transition-transform transition-opacity ",
+          props.isShrinked
+            ? "hidden opacity-0  pointer-events-none delay-0"
+            : "block opacity-100  pointer-events-auto delay-200",
+        )}
+      >
+        {props.name}
+      </span>
     </li>
   );
 };

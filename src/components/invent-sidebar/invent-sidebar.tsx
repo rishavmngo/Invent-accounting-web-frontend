@@ -1,18 +1,19 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import {
   TbCashRegister,
   TbLayoutDashboardFilled,
   TbLayoutSidebarLeftExpandFilled,
   TbLayoutSidebarRightExpandFilled,
 } from "react-icons/tb";
-import logo from "../../public/invent_logo.svg";
+
 import Image from "next/image";
 import { LuBoxes } from "react-icons/lu";
 import { FaHandshake } from "react-icons/fa";
 import SidebarItem from "./invent-sidebar-item";
 import { cn } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useSidebar } from "./invent-sidebar.context";
 
 const sidebarItems = [
   {
@@ -43,7 +44,7 @@ const sidebarItems = [
 ];
 
 const InventSidebar = () => {
-  const [shrinked, setShrinked] = useState<boolean>(false);
+  const { shrinked, toggleExpand } = useSidebar();
   return (
     <div
       className={cn(
@@ -51,24 +52,9 @@ const InventSidebar = () => {
         "flex flex-col items-center bg-[var(--invent-sidebar-background)] h-screen font-(family-name:--font-roboto) py-10 relative transition-all duration-300 ease-in-out ",
       )}
     >
-      {/* <div */}
-      {/*   onClick={() => setShrinked(!shrinked)} */}
-      {/*   // className="absolute top-2 left-2 text-stone-400" */}
-      {/*   className={cn( */}
-      {/*     shrinked ? "left-1/2 transform -translate-x-1/2" : "left-2", */}
-      {/*     "absolute  top-2 text-stone-400", */}
-      {/*   )} */}
-      {/* > */}
-      {/*   {shrinked ? <RiExpandRightFill /> : <RiExpandLeftFill />} */}
-      {/* </div> */}
       <div
-        onClick={() => setShrinked(!shrinked)}
+        onClick={toggleExpand}
         className="oveflow-visible absolute top-2 -right-8 text-stone-400 "
-
-        // className={cn(
-        //   shrinked ? "left-1/2 transform -translate-x-1/2" : "right-2",
-        //   "absolute  top-2 text-stone-400",
-        // )}
       >
         {!shrinked ? (
           <TbLayoutSidebarRightExpandFilled size={30} />
@@ -77,7 +63,7 @@ const InventSidebar = () => {
         )}
       </div>
       <div className="flex  px-6 py-6  gap-4  mb-20 ">
-        <Image src={logo} alt="logo" width={38} height={80} />
+        <Image src="/invent_logo.svg" alt="logo" width={38} height={80} />
         {!shrinked && (
           <h1 className="uppercase font-medium  text-2xl text-[var(--invent-gray)]">
             Invent
@@ -97,11 +83,6 @@ const InventSidebar = () => {
           />
         ))}
       </ul>
-
-      {/* <div className="flex gap-4 text-[var(--invent-gray)] mt-auto h-8"> */}
-      {/*   <IoSettingsSharp size={30} /> */}
-      {/*   {!shrinked && <span className="capitalize text-2xl">Settings</span>} */}
-      {/* </div> */}
 
       <div className="flex gap-4  items-center  border-green-500 text-[var(--invent-gray)] mt-auto h-8">
         <Avatar>

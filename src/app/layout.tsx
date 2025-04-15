@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import InventSidebar from "@/components/invent-sidebar";
 import { Roboto } from "next/font/google";
+import InventSidebar from "@/components/invent-sidebar/invent-sidebar";
+import { SidebarProvider } from "@/components/invent-sidebar/invent-sidebar.context";
 const roboto = Roboto({
   subsets: ["latin"],
   weight: ["400", "500", "700"], // Add weights you need
@@ -22,8 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.variable} antialiased flex`}>
-        <InventSidebar />
-        <main>{children}</main>
+        <SidebarProvider>
+          <InventSidebar />
+          <main>{children}</main>
+        </SidebarProvider>
       </body>
     </html>
   );
