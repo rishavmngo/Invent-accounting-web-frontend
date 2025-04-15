@@ -3,6 +3,7 @@ import "./globals.css";
 import { Roboto } from "next/font/google";
 import InventSidebar from "@/components/invent-sidebar/invent-sidebar";
 import { SidebarProvider } from "@/components/invent-sidebar/invent-sidebar.context";
+import TopBar from "@/components/invent-sidebar/topbar/topbar.component";
 const roboto = Roboto({
   subsets: ["latin"],
   weight: ["400", "500", "700"], // Add weights you need
@@ -25,7 +26,11 @@ export default function RootLayout({
       <body className={`${roboto.variable} antialiased flex`}>
         <SidebarProvider>
           <InventSidebar />
-          <main>{children}</main>
+          <div className="flex-1 flex flex-col ">
+            <TopBar />
+            <main>{children}</main>
+            <div>bottombar</div>
+          </div>
         </SidebarProvider>
       </body>
     </html>
