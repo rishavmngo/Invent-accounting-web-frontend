@@ -12,7 +12,7 @@ type SidebarItemsProps = {
 
 const SidebarItem = (props: SidebarItemsProps) => {
   return (
-    <li className=" group flex px-6 py-6 my-6  items-center  gap-4 text-[var(--invent-gray)]  h-8 hover:bg-[var(--invent-menu-select)] cursor-pointer rounded-sm">
+    <li className="group flex px-6 py-6 my-6  items-center  gap-4 text-[var(--invent-gray)]  h-8 hover:bg-[var(--invent-menu-select)] cursor-pointer rounded-sm">
       <props.icon
         size={props.iconSize}
         className={cn(!props.isShrinked ? "" : "", "group-hover:text-gray-50")}
