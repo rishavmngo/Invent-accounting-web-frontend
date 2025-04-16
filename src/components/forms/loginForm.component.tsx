@@ -46,9 +46,9 @@ const LoginForm = () => {
           />
         </span>
         <section>
-          <span className="">
+          <span className="flex flex-col items-center">
             <h2 className="text-[2rem] font-medium text-[var(--invent-gray)]">
-              Welcome to Invent
+              Welcome Back to Invent
             </h2>
             <h3 className="text-sm text-[var(--invent-text-muted)]">
               Enter your email and password to continue
@@ -111,7 +111,7 @@ const LoginForm = () => {
         <p className="text-[var(--invent-text-muted)]">
           Don&apos;t have an account?
         </p>
-        <Link href="#">Register</Link>
+        <Link href="/register">Register</Link>
       </span>
     </section>
   );
