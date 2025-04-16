@@ -71,7 +71,10 @@ const InventSidebar = () => {
 
       <div className="flex gap-4  items-center  border-green-500 text-[var(--invent-gray)] mt-auto h-8">
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+          <AvatarImage
+            src="https://i.pinimg.com/736x/15/ed/1b/15ed1bdb5985993fd31ef3b507d45e30.jpg"
+            alt="@shadcn"
+          />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
 
