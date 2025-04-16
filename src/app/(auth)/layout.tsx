@@ -1,12 +1,12 @@
-import LoginForm from "@/components/forms/loginForm.component";
+import React from "react";
 
-export default function Auth() {
+export default function AuthLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <div className="grid grid-cols-[25%_75%] h-screen">
       <section className="">
-        <div className="flex items-center h-full">
-          <LoginForm />
-        </div>
+        <div className="flex items-center h-full">{children}</div>
       </section>
       <section
         className="bg-stone-400   bg-no-repeat bg-center "
