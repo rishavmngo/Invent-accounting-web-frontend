@@ -17,19 +17,20 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import { FaGoogle } from "react-icons/fa";
 import Link from "next/link";
+import { RegisterUserSchema } from "@/types/user.type";
 
-const CredentialsSchema = z.object({
-  email: z.string().email("Invalid email format"),
-  fullName: z.string(),
-  password: z.string().min(8, "Password must contain at least 8 characters"),
-  confirmPassword: z
-    .string()
-    .min(8, "Password must contain at least 8 characters"),
-});
+// const CredentialsSchema = z.object({
+//   email: z.string().email("Invalid email format"),
+//   fullName: z.string(),
+//   password: z.string().min(8, "Password must contain at least 8 characters"),
+//   confirmPassword: z
+//     .string()
+//     .min(8, "Password must contain at least 8 characters"),
+// });
 
 const RegistrationForm = () => {
-  const form = useForm<z.infer<typeof CredentialsSchema>>({
-    resolver: zodResolver(CredentialsSchema),
+  const form = useForm<z.infer<typeof RegisterUserSchema>>({
+    resolver: zodResolver(RegisterUserSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -37,7 +38,7 @@ const RegistrationForm = () => {
       confirmPassword: "",
     },
   });
-  function onSubmit(values: z.infer<typeof CredentialsSchema>) {
+  function onSubmit(values: z.infer<typeof RegisterUserSchema>) {
     console.log(values);
   }
   return (

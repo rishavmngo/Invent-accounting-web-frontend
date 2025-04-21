@@ -3,7 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useForm } from "react-hook-form";
 import React from "react";
-import { z } from "zod";
 import {
   Form,
   FormControl,
@@ -17,23 +16,26 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import { FaGoogle } from "react-icons/fa";
 import Link from "next/link";
+import { LoginUser, LoginUserSchema } from "@/types/user.type";
 
-const CredentialsSchema = z.object({
-  email: z.string().email("Invalid email format"),
-  password: z.string().min(8, "Password must contain at least 8 characters"),
-});
+type LoginFormPropsType = {
+  loginUser: (credentials: LoginUser) => Promise<boolean>;
+};
 
-const LoginForm = () => {
-  const form = useForm<z.infer<typeof CredentialsSchema>>({
-    resolver: zodResolver(CredentialsSchema),
+const LoginForm = (props: LoginFormPropsType) => {
+  const form = useForm<LoginUser>({
+    resolver: zodResolver(LoginUserSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
-  function onSubmit(values: z.infer<typeof CredentialsSchema>) {
+  function onSubmit(values: LoginUser) {
     console.log(values);
+    props.loginUser(values);
+    // loginUser(values);
   }
+
   return (
     <section className="px-10 w-full flex flex-col">
       <header className="flex flex-col items-center mb-18">

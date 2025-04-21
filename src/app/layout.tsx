@@ -1,6 +1,8 @@
-import type { Metadata } from "next";
+"use client";
+import { store } from "@/state/store";
 import "./globals.css";
 import { Roboto } from "next/font/google";
+import { Provider } from "react-redux";
 const roboto = Roboto({
   subsets: ["latin"],
   weight: ["400", "500", "700"], // Add weights you need
@@ -8,10 +10,10 @@ const roboto = Roboto({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Invent",
-  description: "Your business manager",
-};
+// export const metadata: Metadata = {
+//   title: "Invent",
+//   description: "Your business manager",
+// };
 
 export default function RootLayout({
   children,
@@ -21,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.variable} antialiased`}>
-        <main>{children}</main>
+        <main>
+          <Provider store={store}>{children}</Provider>
+        </main>
       </body>
     </html>
   );
