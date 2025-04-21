@@ -1,4 +1,5 @@
-import { cn } from "@/lib/utils";
+import { appPath, cn } from "@/lib/utils";
+import Link from "next/link";
 import React from "react";
 import { IconType } from "react-icons";
 
@@ -12,22 +13,27 @@ type SidebarItemsProps = {
 
 const SidebarItem = (props: SidebarItemsProps) => {
   return (
-    <li className="group flex px-6 py-6 my-6  items-center  gap-4 text-[var(--invent-gray)]  h-8 hover:bg-[var(--invent-menu-select)] cursor-pointer rounded-sm">
-      <props.icon
-        size={props.iconSize}
-        className={cn(!props.isShrinked ? "" : "", "group-hover:text-gray-50")}
-      />
-      <span
-        className={cn(
-          "capitalize text-2xl group-hover:text-gray-50 transition-transform transition-opacity ",
-          props.isShrinked
-            ? "hidden opacity-0  pointer-events-none delay-0"
-            : "block opacity-100  pointer-events-auto delay-200",
-        )}
-      >
-        {props.name}
-      </span>
-    </li>
+    <Link href={appPath(props.link)}>
+      <li className="group flex px-6 py-6 my-6  items-center  gap-4 text-[var(--invent-gray)]  h-8 hover:bg-[var(--invent-menu-select)] cursor-pointer rounded-sm">
+        <props.icon
+          size={props.iconSize}
+          className={cn(
+            !props.isShrinked ? "" : "",
+            "group-hover:text-gray-50",
+          )}
+        />
+        <span
+          className={cn(
+            "capitalize text-2xl group-hover:text-gray-50 transition-transform transition-opacity ",
+            props.isShrinked
+              ? "hidden opacity-0  pointer-events-none delay-0"
+              : "block opacity-100  pointer-events-auto delay-200",
+          )}
+        >
+          {props.name}
+        </span>
+      </li>
+    </Link>
   );
 };
 

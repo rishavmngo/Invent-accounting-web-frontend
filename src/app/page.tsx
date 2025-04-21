@@ -1,3 +1,6 @@
+import { redirect } from "next/navigation";
+
 export default function Home() {
-  return <div className="">content</div>;
+  redirect("/app");
+  // return <div className="">content</div>;
 }

@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 const AuthGuard = ({ children }: { children: React.ReactNode }) => {
-  const { isLoading } = useAppSelector((state) => state.auth);
+  const state = useAppSelector((state) => state.auth);
 
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -26,12 +26,23 @@ const AuthGuard = ({ children }: { children: React.ReactNode }) => {
       }
     };
     checkAuth();
-  }, [dispatch, router, pathName]);
-  if (isLoading) {
-    return <div>Loading</div>;
+  }, []);
+
+  if (state.isLoading) {
+    return <div>Loading...</div>;
   }
 
-  return <div>{children}</div>;
+  if (state.isAuthenticated) {
+    return (
+      <div>
+        <h1>{JSON.stringify(state)}</h1>
+        {children}
+      </div>
+    );
+
+    // return null;
+  }
+  return <div>Loading...</div>;
 };
 
 export default AuthGuard;

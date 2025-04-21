@@ -21,19 +21,19 @@ const sidebarItems = [
   {
     id: "sidebarItems_02",
     name: "sell",
-    link: "",
+    link: "#",
     icon: TbCashRegister,
   },
   {
     id: "sidebarItems_03",
     name: "inventory",
-    link: "",
+    link: "#",
     icon: LuBoxes,
   },
   {
     id: "sidebarItems_04",
     name: "parties",
-    link: "",
+    link: "/parties",
     icon: FaHandshake,
   },
 ];
