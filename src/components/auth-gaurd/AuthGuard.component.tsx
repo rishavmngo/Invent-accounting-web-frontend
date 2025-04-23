@@ -1,4 +1,5 @@
 "use client";
+
 import { useAppDispatch, useAppSelector } from "@/state/auth/auth-hook";
 import { verifyToken } from "@/state/auth/authslice";
 import { usePathname, useRouter } from "next/navigation";
@@ -28,14 +29,14 @@ const AuthGuard = ({ children }: { children: React.ReactNode }) => {
     checkAuth();
   }, []);
 
-  if (state.isLoading) {
-    return <div>Loading...</div>;
-  }
+  // if (state.isLoading) {
+  //   return <div>Loading...</div>;
+  // }
 
   if (state.isAuthenticated) {
     return (
       <div>
-        <h1>{JSON.stringify(state)}</h1>
+        {/* <h1>{JSON.stringify(state)}</h1> */}
         {children}
       </div>
     );

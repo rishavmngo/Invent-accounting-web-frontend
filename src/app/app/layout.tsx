@@ -15,7 +15,7 @@ export default function AppLayout({
           <div className="flex-1 flex flex-col ">
             <TopBar />
             <div>{children}</div>
-            <div>bottombar</div>
+            {/* <div>bottombar</div> */}
           </div>
         </SidebarProvider>
       </main>
