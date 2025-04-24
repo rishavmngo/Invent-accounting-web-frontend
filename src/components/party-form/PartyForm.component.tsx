@@ -36,8 +36,12 @@ import {
 
 type tabOptions = "addresses" | "gstDetails";
 
-const PartyForm = () => {
-  const [open, setOpen] = useState(true);
+type PartyFormProps = {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const PartyForm = ({ open, setOpen }: PartyFormProps) => {
   const [currentTab, setCurrentTab] = useState<tabOptions>("gstDetails");
   const form = useForm<PartyFormT>({
     resolver: zodResolver(PartyFormSchema),

@@ -1,11 +1,17 @@
+"use client";
 import PartyEntityCard from "@/components/entity-card-party/PartyEntityCard";
 import { BsPerson } from "react-icons/bs";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useState } from "react";
 import PartyForm from "@/components/party-form/PartyForm.component";
-import DatePicker from "@/components/date-picker/DatePicker.component";
 
-const page = () => {
+const Page = () => {
+  const [isPartyFormOpen, togglePartyForm] = useState(false);
+
+  const handlePartyFormVisiblity = () => {
+    togglePartyForm(!isPartyFormOpen);
+  };
+
   return (
     <div className="ml-10  inline-flex flex-col gap-8 flex-wrap">
       <h1 className="text-[var(--invent-gray)] font-md text-2xl">Parties</h1>
@@ -33,12 +39,12 @@ const page = () => {
           lastTrade={"2025-02-08T10:34:23.000Z"}
         />
       </ul>
-      <Button className="self-end">
+      <Button className="self-end" onClick={handlePartyFormVisiblity}>
         <BsPerson /> Add New Party
       </Button>
-      <PartyForm />
+      <PartyForm open={isPartyFormOpen} setOpen={togglePartyForm} />
     </div>
   );
 };
 
-export default page;
+export default Page;
