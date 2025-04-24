@@ -61,7 +61,9 @@ const PartyForm = ({ open, setOpen }: PartyFormProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="">
-        <DialogTitle>Add new party</DialogTitle>
+        <DialogTitle className="text-2xl font-medium">
+          Add New Party
+        </DialogTitle>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
