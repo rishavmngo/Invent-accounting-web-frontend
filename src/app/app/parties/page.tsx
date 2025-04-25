@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
 import PartyForm from "@/components/party-form/PartyForm.component";
 import PartyDetailsForm from "@/components/party-details-form/PartyDetailsForm.component";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   const [isPartyFormOpen, togglePartyForm] = useState(false);
-  const [isPartyDetailsFormOpen, togglePartyDetailsForm] = useState(true);
+  const [isPartyDetailsFormOpen, togglePartyDetailsForm] = useState(false);
 
   const handlePartyFormVisiblity = () => {
     togglePartyForm(!isPartyFormOpen);
@@ -17,13 +18,19 @@ const Page = () => {
   const handlePartyDetailsFormVisiblity = () => {
     togglePartyDetailsForm(!isPartyDetailsFormOpen);
   };
+
+  const router = useRouter();
+  const handlePartyCardClick = () => {
+    router.push(`/app/parties/abs3232bss32`);
+  };
+
   return (
-    <div className="ml-10  inline-flex flex-col gap-8 flex-wrap">
+    <div className="inline-flex flex-col gap-8 flex-wrap">
       <h1 className="text-[var(--invent-gray)] font-md text-2xl">Parties</h1>
       <ul className="flex flex-col gap-10 ">
         <PartyEntityCard
           name="Geeta Textile"
-          onClick={handlePartyDetailsFormVisiblity}
+          onClick={handlePartyCardClick}
           tabIndex={2}
           amount={100}
           payable={false}
@@ -33,7 +40,7 @@ const Page = () => {
 
         <PartyEntityCard
           name="Ganesh Steel"
-          onClick={handlePartyDetailsFormVisiblity}
+          onClick={handlePartyCardClick}
           tabIndex={2}
           amount={100}
           payable={true}
@@ -42,7 +49,7 @@ const Page = () => {
         />
         <PartyEntityCard
           name="atoz furniture"
-          onClick={handlePartyDetailsFormVisiblity}
+          onClick={handlePartyCardClick}
           tabIndex={2}
           amount={0}
           payable={true}
