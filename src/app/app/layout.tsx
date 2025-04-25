@@ -14,7 +14,7 @@ export default function AppLayout({
           <InventSidebar />
           <div className="flex-1 flex flex-col ">
             <TopBar />
-            <div>{children}</div>
+            <div className="mx-10 my-5">{children}</div>
             {/* <div>bottombar</div> */}
           </div>
         </SidebarProvider>
