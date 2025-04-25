@@ -47,14 +47,20 @@ const PartyForm = ({ open, setOpen }: PartyFormProps) => {
     resolver: zodResolver(PartyFormSchema),
     defaultValues: {
       name: "",
-      // as_of_date: new Date(),
-      receivable: true,
-      gst_type: "unregisterd-consumer",
+      contact_number: "",
+      billing_address: "",
+      email_address: "",
+      gstin: "09AAACH7409R1ZZ",
       state: "kerala",
+      opening_balance: "",
+      // as_of_date: new Date(),
+      receivable: false,
+      gst_type: "unregisterd-consumer",
     },
   });
 
   function onSubmit(values: PartyFormT) {
+    console.log("submitted!!!!");
     console.log(values);
   }
 
@@ -128,7 +134,15 @@ const PartyForm = ({ open, setOpen }: PartyFormProps) => {
                         Opening Balance
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="" {...field} />
+                        <Input
+                          type="text"
+                          placeholder="Enter opening balance"
+                          {...field}
+                          value={field.value === undefined ? "" : field.value}
+                          onChange={(e) => {
+                            field.onChange(e.target.value);
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -303,6 +317,7 @@ const PartyForm = ({ open, setOpen }: PartyFormProps) => {
                 />
               </TabsContent>
             </Tabs>
+            <Button type="submit">add</Button>
           </form>
         </Form>
       </DialogContent>
