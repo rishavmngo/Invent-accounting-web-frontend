@@ -138,7 +138,7 @@ const PartyForm = ({ open, setOpen }: PartyFormProps) => {
                           type="text"
                           placeholder="Enter opening balance"
                           {...field}
-                          value={field.value === undefined ? "" : field.value}
+                          value={field.value as string}
                           onChange={(e) => {
                             field.onChange(e.target.value);
                           }}
