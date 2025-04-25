@@ -12,9 +12,10 @@ import {
   FaUsers,
 } from "react-icons/fa";
 import SidebarItem from "./invent-sidebar-item";
-import { cn } from "@/lib/utils";
+import { cn, IsPageActive } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useSidebar } from "./invent-sidebar.context";
+import { usePathname, useRouter } from "next/navigation";
 
 const sidebarItems = [
   {
@@ -27,25 +28,26 @@ const sidebarItems = [
   {
     id: "sidebarItems_02",
     name: "sell",
-    link: "#",
+    link: "sell",
     icon: FaMoneyBills,
   },
   {
     id: "sidebarItems_03",
     name: "inventory",
-    link: "#",
+    link: "inventory",
     icon: LuBoxes,
   },
   {
     id: "sidebarItems_04",
     name: "parties",
-    link: "/parties",
+    link: "parties",
     icon: FaUsers,
   },
 ];
 
 const InventSidebar = () => {
   const { shrinked } = useSidebar();
+  const pathname = usePathname();
   return (
     <div
       className={cn(
@@ -71,6 +73,7 @@ const InventSidebar = () => {
             iconSize={30}
             link={item.link}
             isShrinked={shrinked}
+            active={IsPageActive(pathname, item.link)}
           />
         ))}
       </ul>
