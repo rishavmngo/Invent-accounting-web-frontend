@@ -8,9 +8,8 @@ import { login, logout, signup, verifyToken } from "@/state/auth/authslice";
 export const useAuth = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { user, token, isLoading, isAuthenticated, error } = useAppSelector(
-    (state) => state.auth,
-  );
+  const { user, token, ownerId, isLoading, isAuthenticated, error } =
+    useAppSelector((state) => state.auth);
 
   const loginUser = useCallback(
     async (credentials: LoginUser) => {
@@ -57,6 +56,7 @@ export const useAuth = () => {
 
   return {
     user,
+    ownerId,
     token,
     isLoading,
     isAuthenticated,

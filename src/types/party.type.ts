@@ -24,6 +24,11 @@ export const NewPartySchema = PartySchema.omit({
 
 export type NewParty = z.infer<typeof NewPartySchema>;
 
+export const PartyApiDataSchema = NewPartySchema.extend({
+  user_id: z.number(),
+});
+
+export type PartyApiData = z.infer<typeof PartyApiDataSchema>;
 export const PartyFormSchema = NewPartySchema.extend({
   opening_balance: z.preprocess((val) => {
     if (typeof val === "string") {

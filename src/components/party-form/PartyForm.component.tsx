@@ -33,6 +33,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { useMutation } from "@tanstack/react-query";
+import { addParty } from "@/api/parties";
+import { useAuth } from "@/hooks/useAuth";
 
 type tabOptions = "addresses" | "gstDetails";
 
@@ -42,6 +45,7 @@ type PartyFormProps = {
 };
 
 const PartyForm = ({ open, setOpen }: PartyFormProps) => {
+  const { ownerId } = useAuth();
   const [currentTab, setCurrentTab] = useState<tabOptions>("gstDetails");
   const form = useForm<PartyFormT>({
     resolver: zodResolver(PartyFormSchema),
@@ -55,13 +59,27 @@ const PartyForm = ({ open, setOpen }: PartyFormProps) => {
       opening_balance: "",
       // as_of_date: new Date(),
       receivable: false,
-      gst_type: "unregisterd-consumer",
+      gst_type: "unregisterd",
     },
   });
 
+  const mutation = useMutation({
+    mutationFn: addParty,
+    onSuccess: () => {
+      console.log("here");
+      // Invalidate and refetch
+      // queryClient.invalidateQueries({ queryKey: ['todos'] })
+    },
+  });
   function onSubmit(values: PartyFormT) {
     console.log("submitted!!!!");
     console.log(values);
+
+    if (!ownerId) {
+      console.log("owner id missing");
+      return;
+    }
+    mutation.mutate({ ...values, user_id: ownerId });
   }
 
   return (
@@ -274,13 +292,13 @@ const PartyForm = ({ open, setOpen }: PartyFormProps) => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="unregisterd-consumer">
+                          <SelectItem value="unregisterd">
                             Unregisterd/Consumer
                           </SelectItem>
-                          <SelectItem value="registerd-regular">
+                          <SelectItem value="regular">
                             Registerd-Regular
                           </SelectItem>
-                          <SelectItem value="registerd-composite">
+                          <SelectItem value="composite">
                             Registerd-Composite
                           </SelectItem>
                         </SelectContent>

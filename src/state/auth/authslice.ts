@@ -1,8 +1,9 @@
-import { LoginUser, RegisterUser } from "@/types/user.type";
+import { LoginUser, RegisterUser, User } from "@/types/user.type";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface AuthState {
-  user: object | null;
+  user: User | null;
+  ownerId: number | undefined;
   token: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
@@ -11,6 +12,7 @@ interface AuthState {
 
 const initialState: AuthState = {
   user: null,
+  ownerId: undefined,
   token: null,
   isLoading: false,
   isAuthenticated: false,
@@ -20,7 +22,7 @@ const initialState: AuthState = {
 const API_URL = "http://localhost:5000/auth";
 
 interface AuthResponse {
-  user: object;
+  user: User;
   token: string;
 }
 // Add auto-login thunk
@@ -139,6 +141,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isAuthenticated = true;
         state.user = action.payload.user;
+        state.ownerId = action.payload.user.id;
         state.token = action.payload.token;
       })
       .addCase(login.rejected, (state, action) => {
@@ -154,6 +157,7 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isAuthenticated = true;
         state.user = action.payload.user;
+        state.ownerId = action.payload.user.id;
         state.token = action.payload.token;
       })
       .addCase(signup.rejected, (state, action) => {
@@ -168,12 +172,14 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isAuthenticated = true;
         state.user = action.payload.user;
+        state.ownerId = action.payload.user.id;
         state.token = action.payload.token;
       })
       .addCase(verifyToken.rejected, (state) => {
         state.isLoading = false;
         state.isAuthenticated = false;
         state.user = null;
+        state.ownerId = undefined;
         state.token = null;
       });
   },
