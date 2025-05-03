@@ -24,3 +24,10 @@ export const apiClient = async (endpoint: string, options = {}) => {
 
   return response.json();
 };
+
+export type ApiResponse<T> = {
+  success: boolean;
+  code: string;
+  message: string;
+  data: T;
+};

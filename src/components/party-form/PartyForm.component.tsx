@@ -33,7 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addParty } from "@/api/parties";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -45,6 +45,7 @@ type PartyFormProps = {
 };
 
 const PartyForm = ({ open, setOpen }: PartyFormProps) => {
+  const queryClient = useQueryClient();
   const { ownerId } = useAuth();
   const [currentTab, setCurrentTab] = useState<tabOptions>("gstDetails");
   const form = useForm<PartyFormT>({
@@ -65,10 +66,10 @@ const PartyForm = ({ open, setOpen }: PartyFormProps) => {
 
   const mutation = useMutation({
     mutationFn: addParty,
+    mutationKey: ["partyCardData"],
     onSuccess: () => {
       console.log("here");
-      // Invalidate and refetch
-      // queryClient.invalidateQueries({ queryKey: ['todos'] })
+      queryClient.invalidateQueries({ queryKey: ["partyCardData"] });
     },
   });
   function onSubmit(values: PartyFormT) {
@@ -335,7 +336,8 @@ const PartyForm = ({ open, setOpen }: PartyFormProps) => {
                 />
               </TabsContent>
             </Tabs>
-            <Button type="submit">add</Button>
+
+            <Button type="submit">Add Party</Button>
           </form>
         </Form>
       </DialogContent>

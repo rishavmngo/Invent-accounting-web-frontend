@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const PartySchema = z.object({
   id: z.number(),
-  name: z.string(),
+  name: z.string().min(1, "Name is required"),
   contact_number: z.string().optional(),
   billing_address: z.string().optional(),
   email_address: z.string().email().or(z.literal("")).optional(),

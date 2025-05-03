@@ -6,56 +6,56 @@ import React, { useState } from "react";
 import PartyForm from "@/components/party-form/PartyForm.component";
 import PartyDetailsForm from "@/components/party-details-form/PartyDetailsForm.component";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
+import { getAllPartyCardData } from "@/api/parties";
+import SkeletonPartyEntityCard from "@/components/entity-card-party/SkeletonPartyEntityCard.component";
 
 const Page = () => {
   const [isPartyFormOpen, togglePartyForm] = useState(false);
   const [isPartyDetailsFormOpen, togglePartyDetailsForm] = useState(false);
+  const { ownerId } = useAuth();
+
+  const { data: parties, isLoading } = useQuery({
+    queryFn: () => {
+      if (ownerId) return getAllPartyCardData(ownerId);
+      return [];
+    },
+    queryKey: ["partyCardData", ownerId],
+  });
 
   const handlePartyFormVisiblity = () => {
     togglePartyForm(!isPartyFormOpen);
   };
 
-  const handlePartyDetailsFormVisiblity = () => {
-    togglePartyDetailsForm(!isPartyDetailsFormOpen);
-  };
-
   const router = useRouter();
-  const handlePartyCardClick = () => {
-    router.push(`/app/parties/abs3232bss32`);
+  const handlePartyCardClick = (id: number) => {
+    router.push(`/app/parties/${id}`);
   };
 
   return (
     <div className="inline-flex flex-col gap-8 flex-wrap">
       <h1 className="text-[var(--invent-gray)] font-md text-2xl">Parties</h1>
       <ul className="flex flex-col gap-10 ">
-        <PartyEntityCard
-          name="Geeta Textile"
-          onClick={handlePartyCardClick}
-          tabIndex={2}
-          amount={100}
-          payable={false}
-          rating={2.5}
-          lastTrade={"2024-04-12T10:34:23.000Z"}
-        />
-
-        <PartyEntityCard
-          name="Ganesh Steel"
-          onClick={handlePartyCardClick}
-          tabIndex={2}
-          amount={100}
-          payable={true}
-          rating={4}
-          lastTrade={"2025-02-08T10:34:23.000Z"}
-        />
-        <PartyEntityCard
-          name="atoz furniture"
-          onClick={handlePartyCardClick}
-          tabIndex={2}
-          amount={0}
-          payable={true}
-          rating={4}
-          lastTrade={"2025-02-08T10:34:23.000Z"}
-        />
+        {isLoading &&
+          Array.from({ length: 2 }).map((_, i) => (
+            <SkeletonPartyEntityCard key={i} />
+          ))}
+        {!isLoading &&
+          parties?.map((party) => {
+            return (
+              <PartyEntityCard
+                key={party.id}
+                name={party.name}
+                onClick={() => handlePartyCardClick(party.id)}
+                tabIndex={2}
+                amount={100}
+                payable={false}
+                rating={2.5}
+                lastTrade={"2024-04-12T10:34:23.000Z"}
+              />
+            );
+          })}
       </ul>
       <Button
         tabIndex={3}
