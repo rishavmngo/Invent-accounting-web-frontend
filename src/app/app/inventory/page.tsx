@@ -46,6 +46,7 @@ const Page = () => {
               <InventoryEntityCard
                 key={item.id}
                 name={item.name}
+                onClick={() => handlePartyCardClick(item.id)}
                 purchase_price={item.purchase_price}
                 sell_price={item.sale_price}
               />

@@ -2,6 +2,8 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { format } from "date-fns";
 
+const CurrencySymbol = "₹";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -11,6 +13,14 @@ export const appPath = (path: string) =>
 
 export const formatDate = (isoDate: string): string => {
   return format(new Date(isoDate), "dd MMM, yy");
+};
+
+export const formatCurrency = (amount: number): string => {
+  return (
+    CurrencySymbol +
+    " " +
+    (amount % 1 === 0 ? amount.toFixed(1) : amount.toString())
+  );
 };
 
 export const IsPageActive = (pathname: string, path: string) => {

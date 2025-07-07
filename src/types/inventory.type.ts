@@ -16,7 +16,9 @@ export const ItemInputSchema = z.object({
 });
 export type ItemInput = z.input<typeof ItemInputSchema>;
 
-export const ItemSchema = BaseSchema.merge(ItemInputSchema);
+export const ItemSchema = BaseSchema.merge(ItemInputSchema).extend({
+  quantity: z.number(),
+});
 
 export type Item = z.infer<typeof ItemSchema>;
 

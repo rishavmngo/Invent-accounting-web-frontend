@@ -23,11 +23,11 @@ export const getAllItemsCardData = async (userId: number) => {
   }
 };
 
-export const getItemById = async (userId: number, partyId: number) => {
+export const getItemById = async (userId: number, itemId: number) => {
   try {
     const response: ApiResponse<Item> = await apiClient("/inventory/getById", {
       method: "POST",
-      body: JSON.stringify({ user_id: userId, party_id: partyId }),
+      body: JSON.stringify({ user_id: userId, item_id: itemId }),
     });
     return response.data;
   } catch (error) {
