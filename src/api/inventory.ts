@@ -7,6 +7,17 @@ export const addItem = (item: ItemFormApiData) =>
     body: JSON.stringify(item),
   });
 
+export const deleteItem = (data: { id: number; user_id?: number }) =>
+  apiClient("/inventory/delete", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+export const updateItem = (item: ItemFormApiData & { id: number }) =>
+  apiClient("/inventory/update", {
+    method: "POST",
+    body: JSON.stringify(item),
+  });
+
 export const getAllItemsCardData = async (userId: number) => {
   try {
     const response: ApiResponse<Item[]> = await apiClient(

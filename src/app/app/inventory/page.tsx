@@ -12,7 +12,6 @@ import InventoryForm from "@/components/inventory-form/InventoryForm.component";
 
 const Page = () => {
   const [isInventoryFormOpen, toggleInventoryForm] = useState(false);
-  // const [isPartyDetailsFormOpen, togglePartyDetailsForm] = useState(false);
   const { ownerId } = useAuth();
 
   const { data: items, isLoading } = useQuery({

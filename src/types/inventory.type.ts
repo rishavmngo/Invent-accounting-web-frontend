@@ -20,6 +20,14 @@ export const ItemSchema = BaseSchema.merge(ItemInputSchema).extend({
   quantity: z.number(),
 });
 
+export const ItemUpdateFormSchema = ItemSchema.omit({
+  quantity: true,
+  min_stock_qty: true,
+  location: true,
+});
+
+export type ItemUpdateForm = z.infer<typeof ItemUpdateFormSchema>;
+
 export type Item = z.infer<typeof ItemSchema>;
 
 export const ItemFormApiSchema = ItemInputSchema.extend({

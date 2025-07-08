@@ -1,21 +1,26 @@
 "use client";
-import { getItemById } from "@/api/inventory";
+import { deleteItem, getItemById } from "@/api/inventory";
 import { useAuth } from "@/hooks/useAuth";
-import { cn, formatCurrency, formatDate } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
+import { cn, formatCurrency } from "@/lib/utils";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { FaBoxOpen } from "react-icons/fa";
 import { FaArrowLeft } from "react-icons/fa6";
-import { MdEdit } from "react-icons/md";
+import { MdDelete, MdEdit } from "react-icons/md";
 import StockTransactionCard from "../inventory-transactions/stock-transaction-card";
+import InventoryUpdateForm from "../inventory-form/InventoryUpdateForm.component";
+import { ItemForm, ItemUpdateForm } from "@/types/inventory.type";
 
 type InventoryDetailsPageProps = {
   itemId: number;
 };
 
 const InventoryDetailsPage = ({ itemId }: InventoryDetailsPageProps) => {
+  const queryClient = useQueryClient();
+  const [isInventoryUpdateFormOpen, toggleInventoryUpdateForm] =
+    useState<boolean>(false);
   const router = useRouter();
   const { ownerId } = useAuth();
 
@@ -23,7 +28,7 @@ const InventoryDetailsPage = ({ itemId }: InventoryDetailsPageProps) => {
 
   console.log(ownerId, itemid);
   const { data } = useQuery({
-    queryKey: ["item", ownerId, itemid],
+    queryKey: ["ItemCardData", ownerId, itemid],
     queryFn: () => {
       if (!ownerId || !itemid) return null;
       return getItemById(ownerId, itemid);
@@ -31,26 +36,51 @@ const InventoryDetailsPage = ({ itemId }: InventoryDetailsPageProps) => {
     enabled: !!ownerId && !!itemid,
   });
 
+  const mutation = useMutation({
+    mutationFn: deleteItem,
+    mutationKey: ["ItemCardData"],
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ItemCardData"] });
+    },
+  });
+
+  const handleItemDelete = () => {
+    // mutation.mutate({id: itemid, user_id: ownerId})
+  };
+
   console.log(data);
   return (
     <section className="">
-      <div className="flex gap-5 items-center mb-8">
-        <button
-          onClick={() => router.back()}
-          className=" text-[var(--invent-gray)] hover:bg-[#E6E6E6] rounded-sm  p-1 cursor-pointer"
-        >
-          <FaArrowLeft />
-        </button>
-        <span className="text-xl font-bold text-[var(--invent-gray)] ">
-          Item Details
-        </span>
-        <button
-          tabIndex={2}
-          className="ml-auto flex gap-2 items-center rounded-md px-2 py-1 bg-[#E6E6E6] text-[var(--invent-gray)] border hover:border-[var(--invent-gray)] transition-all border-2"
-        >
-          <MdEdit />
-          Edit
-        </button>
+      <div className="flex  items-center mb-8 justify-between">
+        <div>
+          <button
+            onClick={() => router.back()}
+            className=" text-[var(--invent-gray)] hover:bg-[#E6E6E6] rounded-sm  p-1 cursor-pointer"
+          >
+            <FaArrowLeft />
+          </button>
+
+          <span className="text-xl font-bold text-[var(--invent-gray)] ">
+            Item Details
+          </span>
+        </div>
+        <div className="flex gap-2">
+          <button
+            tabIndex={2}
+            onClick={() => {}}
+            className="rounded-md px-2 py-1 bg-red-100 text-[var(--invent-gray)] border border-red-100 hover:border-red-300 transition-all border-2"
+          >
+            <MdDelete className="text-xl text-red-800" />
+          </button>
+          <button
+            tabIndex={3}
+            onClick={() => toggleInventoryUpdateForm(true)}
+            className="ml-auto flex gap-2 items-center rounded-md px-2 py-1 bg-[#E6E6E6] text-[var(--invent-gray)] border hover:border-[var(--invent-gray)] transition-all border-2"
+          >
+            <MdEdit />
+            Edit
+          </button>
+        </div>
       </div>
       <div className="bg-[#E6E6E6] p-6 rounded-md h-[180px] flex justify-between">
         <div className="flex flex-col gap-2 items-start">
@@ -94,6 +124,7 @@ const InventoryDetailsPage = ({ itemId }: InventoryDetailsPageProps) => {
       </div>
 
       <div className="w-[420px] mt-10">
+        <div></div>
         <div
           className={cn(
             "flex h-10 items-center rounded-md border border-input bg-white pl-3 text-sm ring-offset-background focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-2 mb-15 ",
@@ -115,6 +146,15 @@ const InventoryDetailsPage = ({ itemId }: InventoryDetailsPageProps) => {
           />
         </ul>
       </div>
+      {data && (
+        <InventoryUpdateForm
+          key={data?.id}
+          id={data?.id}
+          open={isInventoryUpdateFormOpen}
+          setOpen={toggleInventoryUpdateForm}
+          item={data as ItemUpdateForm}
+        />
+      )}
     </section>
   );
 };
