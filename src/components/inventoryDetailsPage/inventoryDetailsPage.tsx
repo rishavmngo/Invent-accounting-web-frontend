@@ -11,7 +11,15 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { MdDelete, MdEdit } from "react-icons/md";
 import StockTransactionCard from "../inventory-transactions/stock-transaction-card";
 import InventoryUpdateForm from "../inventory-form/InventoryUpdateForm.component";
-import { ItemForm, ItemUpdateForm } from "@/types/inventory.type";
+import { ItemUpdateForm } from "@/types/inventory.type";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../ui/alert-dialog";
+import { Button } from "../ui/button";
 
 type InventoryDetailsPageProps = {
   itemId: number;
@@ -19,6 +27,8 @@ type InventoryDetailsPageProps = {
 
 const InventoryDetailsPage = ({ itemId }: InventoryDetailsPageProps) => {
   const queryClient = useQueryClient();
+  const [isItemDeleteDialogOpen, toggleItemDeleteDialogOpen] =
+    useState<boolean>(false);
   const [isInventoryUpdateFormOpen, toggleInventoryUpdateForm] =
     useState<boolean>(false);
   const router = useRouter();
@@ -45,12 +55,39 @@ const InventoryDetailsPage = ({ itemId }: InventoryDetailsPageProps) => {
   });
 
   const handleItemDelete = () => {
-    // mutation.mutate({id: itemid, user_id: ownerId})
+    mutation.mutate({ id: itemid, user_id: ownerId });
+    router.back();
   };
 
   console.log(data);
   return (
     <section className="">
+      <AlertDialog open={isItemDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Do you want to delete item &quot;
+              <span className="font-bold">{data?.name}</span>&quot; ?
+            </AlertDialogTitle>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="">
+            <div className="flex gap-6">
+              <Button
+                className="bg-white-500 text-black hover:text-white "
+                onClick={() => toggleItemDeleteDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="bg-red-400 hover:bg-red-500"
+                onClick={() => handleItemDelete()}
+              >
+                Confirm
+              </Button>
+            </div>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <div className="flex  items-center mb-8 justify-between">
         <div>
           <button
@@ -67,7 +104,7 @@ const InventoryDetailsPage = ({ itemId }: InventoryDetailsPageProps) => {
         <div className="flex gap-2">
           <button
             tabIndex={2}
-            onClick={() => {}}
+            onClick={() => toggleItemDeleteDialogOpen(true)}
             className="rounded-md px-2 py-1 bg-red-100 text-[var(--invent-gray)] border border-red-100 hover:border-red-300 transition-all border-2"
           >
             <MdDelete className="text-xl text-red-800" />
