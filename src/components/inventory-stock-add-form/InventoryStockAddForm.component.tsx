@@ -22,24 +22,27 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import {
   ItemStockCreationSchema,
   ItemStockCreationT,
 } from "@/types/inventory.type";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { adjustStock } from "@/api/inventory";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 type InventoryStockAddFormProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  itemId: number;
+  ownerId: number;
 };
 
 const InventoryStockAddForm = ({
   open,
   setOpen,
+  itemId,
+  ownerId,
 }: InventoryStockAddFormProps) => {
+  const queryClient = useQueryClient();
   const form = useForm({
     resolver: zodResolver(ItemStockCreationSchema),
     defaultValues: {
@@ -54,16 +57,33 @@ const InventoryStockAddForm = ({
 
   const type = form.watch("type");
 
+  const mutation = useMutation({
+    mutationFn: adjustStock,
+    mutationKey: ["ItemStockCardData"],
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey.includes("ItemCardData") ||
+          query.queryKey.includes("ItemStockCardData"),
+        // queryKey: [""],
+      });
+    },
+  });
+
   function onSubmit(values: ItemStockCreationT) {
     console.log("submitted!!!!");
     console.log(values);
 
-    // if (!ownerId) {
-    //   console.log("owner id missing");
-    //   return;
-    // }
-    // values.item_id = item_id;
-    // mutation.mutate({ ...values, user_id: ownerId });
+    if (!ownerId) {
+      console.log("owner id missing");
+      return;
+    }
+    // values.as_of_date = new Date(values.as_of_date)
+    values.item_id = itemId;
+    console.log("typeof", typeof values.as_of_date);
+    console.log(values);
+    mutation.mutate({ ...values });
   }
   console.log(form.formState.errors);
   return (
@@ -142,7 +162,7 @@ const InventoryStockAddForm = ({
                 </FormItem>
               )}
             />
-            <div className="flex justify-between">
+            <div className="flex gap-6">
               <FormField
                 control={form.control}
                 name="as_of_date"
@@ -151,13 +171,13 @@ const InventoryStockAddForm = ({
                     <FormLabel className="text-[var(--invent-gray)] text-lg">
                       Adjustment Date
                     </FormLabel>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
+                    <Popover modal={true}>
+                      <PopoverTrigger asChild>
                         <FormControl>
                           <Button
                             variant={"outline"}
                             className={cn(
-                              " pl-3 text-left font-normal",
+                              "w-[240px] pl-3 text-left font-normal",
                               !field.value && "text-muted-foreground",
                             )}
                           >
@@ -169,8 +189,8 @@ const InventoryStockAddForm = ({
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
                         </FormControl>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-auto p-0" align="start">
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
                         <Calendar
                           mode="single"
                           selected={field.value}
@@ -178,11 +198,10 @@ const InventoryStockAddForm = ({
                           disabled={(date) =>
                             date > new Date() || date < new Date("1900-01-01")
                           }
-                          initialFocus
+                          captionLayout="dropdown"
                         />
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                    <FormMessage />
+                      </PopoverContent>
+                    </Popover>
                   </FormItem>
                 )}
               />

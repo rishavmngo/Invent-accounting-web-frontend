@@ -1,5 +1,16 @@
 import { apiClient, ApiResponse } from ".";
-import { Item, ItemFormApiData, ItemStock } from "@/types/inventory.type";
+import {
+  Item,
+  ItemFormApiData,
+  ItemStock,
+  ItemStockCreationT,
+} from "@/types/inventory.type";
+
+export const adjustStock = (stock: ItemStockCreationT) =>
+  apiClient("/inventory/adjustStock", {
+    method: "POST",
+    body: JSON.stringify(stock),
+  });
 
 export const addItem = (item: ItemFormApiData) =>
   apiClient("/inventory/add", {
