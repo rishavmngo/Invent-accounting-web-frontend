@@ -1,5 +1,5 @@
 import { apiClient, ApiResponse } from ".";
-import { Item, ItemFormApiData } from "@/types/inventory.type";
+import { Item, ItemFormApiData, ItemStock } from "@/types/inventory.type";
 
 export const addItem = (item: ItemFormApiData) =>
   apiClient("/inventory/add", {
@@ -17,6 +17,22 @@ export const updateItem = (item: ItemFormApiData & { id: number }) =>
     method: "POST",
     body: JSON.stringify(item),
   });
+
+export const getAllItemStock = async (itemId: number) => {
+  try {
+    const response: ApiResponse<ItemStock[]> = await apiClient(
+      "/inventory/getAllStocks",
+      {
+        method: "POST",
+        body: JSON.stringify({ item_id: itemId }),
+      },
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 export const getAllItemsCardData = async (userId: number) => {
   try {

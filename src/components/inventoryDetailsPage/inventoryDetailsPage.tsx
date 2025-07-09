@@ -1,15 +1,13 @@
 "use client";
 import { deleteItem, getItemById } from "@/api/inventory";
 import { useAuth } from "@/hooks/useAuth";
-import { cn, formatCurrency } from "@/lib/utils";
+import { formatCurrency } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { CiSearch } from "react-icons/ci";
 import { FaBoxOpen } from "react-icons/fa";
 import { FaArrowLeft } from "react-icons/fa6";
 import { MdDelete, MdEdit } from "react-icons/md";
-import StockTransactionCard from "../inventory-transactions/stock-transaction-card";
 import InventoryUpdateForm from "../inventory-form/InventoryUpdateForm.component";
 import { ItemUpdateForm } from "@/types/inventory.type";
 import {
@@ -20,6 +18,7 @@ import {
   AlertDialogTitle,
 } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
+import InventoryStockSection from "../inventory-stock-section/InventoryStock.component";
 
 type InventoryDetailsPageProps = {
   itemId: number;
@@ -154,35 +153,9 @@ const InventoryDetailsPage = ({ itemId }: InventoryDetailsPageProps) => {
               </p>
             </span>
           </div>
-          {/* <div className="bg-[var(--invent-gray)] px-4 py-2 rounded-md"> */}
-          {/*   <span className="text-white">No Credit Limit Set</span> */}
-          {/* </div> */}
         </div>
       </div>
-
-      <div className="w-[420px] mt-10">
-        <div></div>
-        <div
-          className={cn(
-            "flex h-10 items-center rounded-md border border-input bg-white pl-3 text-sm ring-offset-background focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-2 mb-15 ",
-          )}
-        >
-          <CiSearch className="h-[24px] w-[24px]" />
-          <input
-            type="search"
-            placeholder="Search stock transactions"
-            className="w-full p-2 placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-          />
-        </div>
-        <ul className="flex flex-col gap-4">
-          <StockTransactionCard
-            type={"add"}
-            date={new Date().toString()}
-            quantity={10}
-            pricePerUnit={100}
-          />
-        </ul>
-      </div>
+      {ownerId && <InventoryStockSection ownerId={ownerId} itemId={itemid} />}
       {data && (
         <InventoryUpdateForm
           key={data?.id}

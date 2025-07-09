@@ -41,3 +41,49 @@ export type ItemFormApiData = z.input<typeof ItemFormApiSchema>;
 
 export const ItemFormSchema = ItemFormApiSchema.omit({ user_id: true });
 export type ItemForm = z.input<typeof ItemFormSchema>;
+
+export const ItemStockSchemaBase = z.object({
+  id: z.number(),
+  type: z.string(),
+  description: z.string().optional(),
+  location: z.string().optional(),
+  as_of_date: z.date().optional(),
+});
+
+export const ItemStockSchema = ItemStockSchemaBase.extend({
+  item_id: z.number(),
+  quantity: z.number(),
+  purchase_price: z.number(),
+});
+
+export const ItemStockCreationSchema = ItemStockSchemaBase.omit({
+  id: true,
+}).extend({
+  quantity: z.preprocess(
+    (val) => (val === "" ? undefined : Number(val)),
+    z
+      .number({
+        required_error: "Quantity is required",
+        invalid_type_error: "Please Enter a valid number",
+      })
+      .min(0, "Quantity must be 0 or greater"),
+  ),
+
+  purchase_price: z.preprocess(
+    (val) => {
+      if (val === "" || val === undefined || val === null) return undefined;
+      return Number(val);
+    },
+    z
+      .number({
+        invalid_type_error: "Please Enter a valid number",
+      })
+      .min(0, "Price must be 0 or greater")
+      .optional(),
+  ),
+  item_id: z.number().optional(),
+});
+
+export type ItemStockCreationT = z.input<typeof ItemStockCreationSchema>;
+
+export type ItemStock = z.infer<typeof ItemStockSchema>;

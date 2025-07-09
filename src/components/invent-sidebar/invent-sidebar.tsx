@@ -1,21 +1,15 @@
 "use client";
 import React from "react";
-import { TbCashRegister, TbLayoutDashboardFilled } from "react-icons/tb";
-import { RxDashboard } from "react-icons/rx";
+import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { FaMoneyBills } from "react-icons/fa6";
 import Image from "next/image";
 import { LuBoxes } from "react-icons/lu";
-import {
-  FaHandshake,
-  FaMoneyBillWave,
-  FaMoneyBillWaveAlt,
-  FaUsers,
-} from "react-icons/fa";
+import { FaUsers } from "react-icons/fa";
 import SidebarItem from "./invent-sidebar-item";
 import { cn, IsPageActive } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useSidebar } from "./invent-sidebar.context";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 const sidebarItems = [
   {
