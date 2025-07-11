@@ -21,8 +21,8 @@ const sidebarItems = [
 
   {
     id: "sidebarItems_02",
-    name: "sell",
-    link: "sell",
+    name: "transactions",
+    link: "transactions",
     icon: FaMoneyBills,
   },
   {
