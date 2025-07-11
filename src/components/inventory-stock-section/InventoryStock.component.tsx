@@ -27,6 +27,7 @@ const InventoryStockSection = ({
     },
     enabled: !!ownerId && !!itemId,
   });
+
   return (
     <div className="w-[500px] mt-10">
       <InventoryStockAddForm
@@ -63,13 +64,7 @@ const InventoryStockSection = ({
       <ul className="flex flex-col gap-4 overflow-y-auto h-[450px] p-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent hover:scrollbar-thumb-gray-500">
         {data && data.length > 0 ? (
           data.map((stock) => (
-            <StockTransactionCard
-              key={stock.id}
-              type={stock.type}
-              date={stock.as_of_date ? stock.as_of_date.toString() : "-"}
-              quantity={stock.quantity}
-              pricePerUnit={stock.purchase_price ? stock.purchase_price : 0}
-            />
+            <StockTransactionCard key={stock.id} stock={stock} />
           ))
         ) : (
           <div className="flex flex-col items-center">

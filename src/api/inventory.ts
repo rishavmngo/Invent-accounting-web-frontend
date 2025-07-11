@@ -6,6 +6,12 @@ import {
   ItemStockCreationT,
 } from "@/types/inventory.type";
 
+export const deleteStock = (data: { itemId: number; itemStockId: number }) =>
+  apiClient("/inventory/deleteStock", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+
 export const adjustStock = (stock: ItemStockCreationT) =>
   apiClient("/inventory/adjustStock", {
     method: "POST",

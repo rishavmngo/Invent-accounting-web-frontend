@@ -21,26 +21,39 @@ import {
   AlertDialogTitle,
 } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteStock } from "@/api/inventory";
+import { ItemStock } from "@/types/inventory.type";
 type StockTransactionCardProps = {
-  quantity: number;
-  date: string;
-  type: string;
-  pricePerUnit: number;
+  stock: ItemStock;
 };
 
-const StockTransactionCard = ({
-  type,
-  date,
-  quantity,
-  pricePerUnit,
-}: StockTransactionCardProps) => {
+const StockTransactionCard = ({ stock }: StockTransactionCardProps) => {
   const [isDeleteDialogOpen, toggleDeleteDialogOpen] = useState(false);
+
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: deleteStock,
+    mutationKey: ["ItemStockCardData"],
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey.includes("ItemCardData") ||
+          query.queryKey.includes("ItemStockCardData"),
+      });
+    },
+  });
+
+  const handleStockDelete = () => {
+    mutation.mutate({ itemId: stock.item_id, itemStockId: stock.id });
+  };
+
   return (
     <li className="group flex flex-col gap-4 px-5 py-2 text-sm rounded-md bg-[#F5F5F5] ">
       <div className="flex justify-between">
         <div className="flex items-center gap-4">
-          <h2 className="font-medium text-xl text-[#4E4E4E]">{type}</h2>
-          {type == "reduce" ? (
+          <h2 className="font-medium text-xl text-[#4E4E4E]">{stock.type}</h2>
+          {stock.type == "reduce" ? (
             <span className=" bg-[#f6cccc] p-2 text-[#7d5d5d] flex gap-2 items-center rounded-full">
               <FaBoxOpen className="text-xl " />
               <FaLongArrowAltDown className="" />
@@ -52,7 +65,7 @@ const StockTransactionCard = ({
             </span>
           )}
         </div>
-        {type != "opening_stock" && (
+        {stock.type != "opening_stock" && (
           <div className="flex gap-4 items-center">
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
@@ -66,15 +79,9 @@ const StockTransactionCard = ({
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     className="text-red-600"
-                    onClick={(event) => {
-                      // event.preventDefault();
+                    onClick={() => {
                       toggleDeleteDialogOpen(true);
                     }}
-                    // onClick={() => {
-                    //   setTimeout(() => {
-                    //     toggleDeleteDialogOpen(true);
-                    //   }, 0);
-                    // }}
                   >
                     <MdDelete className="text-red-800" /> Delete
                   </DropdownMenuItem>
@@ -87,17 +94,19 @@ const StockTransactionCard = ({
       <ul className="flex gap-20 ">
         <li>
           <div className="text-[#707070] text-sm">Date</div>
-          <div className="font-medium text-[#464646]">{formatDate(date)}</div>
+          <div className="font-medium text-[#464646]">
+            {formatDate(stock.as_of_date ? stock.as_of_date.toString() : "-")}
+          </div>
         </li>
         <li>
           <div className="text-[#707070] text-sm">Quantity</div>
-          <div>{quantity}</div>
+          <div>{stock.quantity}</div>
         </li>
 
         <li>
           <div className="text-[#707070] text-sm">Price per unit</div>
           <div className="flex items-center text-[#464646]">
-            {formatCurrency(pricePerUnit)}
+            {formatCurrency(stock.purchase_price ? stock.purchase_price : 0)}
           </div>
         </li>
       </ul>
@@ -124,7 +133,7 @@ const StockTransactionCard = ({
               <Button
                 variant="outline"
                 className="border-red-400 text-red-400 hover:bg-red-400 hover:text-white"
-                onClick={() => {}}
+                onClick={() => handleStockDelete()}
               >
                 Confirm
               </Button>
