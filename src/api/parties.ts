@@ -1,6 +1,22 @@
 import { Party, PartyApiData } from "@/types/party.type";
 import { apiClient, ApiResponse } from ".";
 
+export const suggestion = async (query: string) => {
+  try {
+    const response: ApiResponse<Party[]> = await apiClient(
+      "/party/suggestions",
+      {
+        method: "POST",
+        body: JSON.stringify({ query: query }),
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
 export const addParty = (party: PartyApiData) =>
   apiClient("/party/add", {
     method: "POST",

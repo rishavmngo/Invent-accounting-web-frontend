@@ -13,6 +13,9 @@ export type AutocompleteProps<T> = {
   placeholder?: string;
   className?: string;
   inputKey: keyof T;
+  value?: string;
+  setInpAction: (value: string) => void;
+  onTypingStart?: () => void;
 };
 
 export function Autocomplete<T>({
@@ -22,9 +25,12 @@ export function Autocomplete<T>({
   getOptionLabelAction,
   placeholder = "Type to search...",
   className = "",
+  value,
+  setInpAction,
+  onTypingStart,
 }: AutocompleteProps<T>) {
-  const [input, setInput] = useState("");
-  const [debouncedInput] = useDebounce(input, 300);
+  // const [input, setInput] = useState(value as string);
+  const [debouncedInput] = useDebounce(value as string, 300);
   const [isOpen, setIsOpen] = useState(false);
 
   const { data: options = [], isLoading } = useQuery({
@@ -37,9 +43,12 @@ export function Autocomplete<T>({
     <>
       <div className="relative">
         <Input
-          value={input}
+          // value={input}
+          value={value}
           onChange={(e) => {
-            setInput(e.target.value);
+            onTypingStart?.();
+            // setInput(e.target.value);
+            setInpAction(e.target.value);
             setIsOpen(true);
           }}
           placeholder={placeholder}
@@ -57,7 +66,8 @@ export function Autocomplete<T>({
                     key={i}
                     onClick={() => {
                       onSelectAction(item);
-                      setInput(item[inputKey] as string);
+                      // setInput(item[inputKey] as string);
+                      setInpAction(item[inputKey] as string);
                       setIsOpen(false);
                     }}
                     className="cursor-pointer px-3 py-2 hover:bg-gray-100 text-sm"
