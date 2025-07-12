@@ -12,13 +12,14 @@ const TransactionMenuItem = ({
   ...rest
 }: TransactionMenuItemProps) => {
   return (
-    <span
-      className="flex flex-col gap-2 items-center cursor-pointer border border-transparent group"
+    <button
+      className="flex flex-col items-center gap-2 cursor-pointer border border-transparent group p-2 hover:bg-gray-200 rounded"
+      type="button"
       {...rest}
     >
       <Icon size="2em" className="text-gray-600 group-hover:text-black" />
       <p className="text-gray-600 group-hover:text-black ">{name}</p>
-    </span>
+    </button>
   );
 };
 

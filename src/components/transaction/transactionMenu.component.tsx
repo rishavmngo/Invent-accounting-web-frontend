@@ -4,7 +4,9 @@ import React from "react";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import TransactionMenuItem from "./transactionMenuItem";
 import { FaCashRegister } from "react-icons/fa6";
-import { TbCreditCardPay } from "react-icons/tb";
+import { TbCreditCardPay, TbShoppingBagEdit } from "react-icons/tb";
+import { Separator } from "../ui/separator";
+import { FaShoppingBag } from "react-icons/fa";
 
 type TransactionMenuProps = {
   isTrxnMenuOpen: boolean;
@@ -15,10 +17,27 @@ const TransactionMenu = (props: TransactionMenuProps) => {
   return (
     <Dialog open={props.isTrxnMenuOpen} onOpenChange={props.toggleTrxnMenu}>
       <DialogContent>
-        <DialogTitle>Transaction Menu</DialogTitle>
-        <div className="flex gap-12">
-          <TransactionMenuItem Icon={FaCashRegister} name="Sale" />
-          <TransactionMenuItem Icon={TbCreditCardPay} name="Sale Order" />
+        <DialogTitle className="text-black/80">Transaction Menu</DialogTitle>
+        <div className="">
+          <p className="text-black/80 mb-6 mt-2 font-medium">
+            Sale Transactions
+          </p>
+          <div className="grid grid-cols-3 mb-2">
+            <TransactionMenuItem Icon={FaCashRegister} name="Sale" />
+            <TransactionMenuItem Icon={TbCreditCardPay} name="Sale Order" />
+          </div>
+
+          <Separator />
+          <p className="text-black/80 mb-6 mt-2 font-medium">
+            Purchase Transactions
+          </p>
+          <div className="grid grid-cols-3 mb-2">
+            <TransactionMenuItem Icon={FaShoppingBag} name="Purchase" />
+            <TransactionMenuItem
+              Icon={TbShoppingBagEdit}
+              name="Purchase Order"
+            />
+          </div>
         </div>
       </DialogContent>
     </Dialog>
