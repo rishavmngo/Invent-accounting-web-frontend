@@ -91,7 +91,7 @@ const InventoryForm = ({ open, setOpen }: InventoryFormProps) => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-4 h-[600px] overflow-y-scroll p-1"
+            className="flex flex-col gap-4 h-[600px] overflow-y-auto p-1"
           >
             <FormField
               control={form.control}
