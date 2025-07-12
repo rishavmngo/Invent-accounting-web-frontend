@@ -5,7 +5,6 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { IoMdAddCircle } from "react-icons/io";
@@ -60,7 +59,6 @@ const TransactionSaleForm = (props: TransactionSaleFormProps) => {
                   name="customer_name"
                   render={({ field }) => (
                     <>
-                      {"out   " + field.value}
                       <Autocomplete
                         fetchSuggestionsAction={fetchPartySuggesion}
                         onSelectAction={(party: Party) => {

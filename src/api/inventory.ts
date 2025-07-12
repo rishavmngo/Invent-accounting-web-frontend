@@ -6,6 +6,22 @@ import {
   ItemStockCreationT,
 } from "@/types/inventory.type";
 
+export const suggestion = async (query: string) => {
+  try {
+    const response: ApiResponse<Item[]> = await apiClient(
+      "/inventory/suggestions",
+      {
+        method: "POST",
+        body: JSON.stringify({ query: query }),
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
 export const deleteStock = (data: { itemId: number; itemStockId: number }) =>
   apiClient("/inventory/deleteStock", {
     method: "POST",

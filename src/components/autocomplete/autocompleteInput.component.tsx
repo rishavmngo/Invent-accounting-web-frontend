@@ -29,7 +29,6 @@ export function Autocomplete<T>({
   setInpAction,
   onTypingStart,
 }: AutocompleteProps<T>) {
-  // const [input, setInput] = useState(value as string);
   const [debouncedInput] = useDebounce(value as string, 300);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -43,11 +42,9 @@ export function Autocomplete<T>({
     <>
       <div className="relative">
         <Input
-          // value={input}
           value={value}
           onChange={(e) => {
             onTypingStart?.();
-            // setInput(e.target.value);
             setInpAction(e.target.value);
             setIsOpen(true);
           }}
@@ -66,7 +63,6 @@ export function Autocomplete<T>({
                     key={i}
                     onClick={() => {
                       onSelectAction(item);
-                      // setInput(item[inputKey] as string);
                       setInpAction(item[inputKey] as string);
                       setIsOpen(false);
                     }}
