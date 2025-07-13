@@ -13,10 +13,35 @@ import { Autocomplete } from "../autocomplete/autocompleteInput.component";
 import { suggestion } from "@/api/parties";
 import { Party } from "@/types/party.type";
 import { saleFormBaseSchema, saleFormBaseT } from "@/types/transaction.type";
+import { InventoryTransactionT } from "@/types/inventory.type";
+import { formatCurrency } from "@/lib/utils";
 
 async function fetchPartySuggesion(query: string): Promise<Party[]> {
   const data = await suggestion(query);
   return data as Party[];
+}
+
+function formulaTotalAmount(item: InventoryTransactionT): number {
+  let quantity = 1;
+  let price = 1;
+  if (item.quantity) {
+    quantity = item.quantity;
+  }
+
+  if (item.price_per_unit) {
+    price = item.price_per_unit;
+  }
+
+  return quantity * price;
+}
+
+function calculateTotalAmount(items: InventoryTransactionT[]) {
+  let amt = 0;
+  items.forEach((item) => {
+    amt += formulaTotalAmount(item);
+  });
+
+  return amt;
 }
 
 type TransactionSaleFormProps = {
@@ -27,11 +52,15 @@ const TransactionSaleForm = (props: TransactionSaleFormProps) => {
   const [formStage, setFormStage] = useState<"saleMain" | "addItem">(
     "saleMain",
   );
+  const [items, setItems] = useState<InventoryTransactionT[]>([]);
   const form = useForm({
     resolver: zodResolver(saleFormBaseSchema),
     defaultValues: {
       customer_name: "",
       customer_id: null,
+      due_date: null,
+      total_amount: null,
+      paid_amount: null,
       contact_number: "",
     },
   });
@@ -39,8 +68,12 @@ const TransactionSaleForm = (props: TransactionSaleFormProps) => {
   const handleSecondFormClose = () => {
     setFormStage("saleMain");
   };
+  console.log("errors", form.formState.errors);
   const onSubmit = (data: saleFormBaseT) => {
+    data.total_amount = calculateTotalAmount(items);
+
     console.log(data);
+    console.log(items);
   };
   return (
     <Dialog open={props.open} onOpenChange={props.toggleOpen}>
@@ -92,6 +125,39 @@ const TransactionSaleForm = (props: TransactionSaleFormProps) => {
                     </FormItem>
                   )}
                 />
+                <ul className="flex flex-col gap-4 max-h-[800px] overflow-y-auto">
+                  {items.map((item, index) => {
+                    return (
+                      <li
+                        key={index + " " + item.item_id}
+                        className="bg-gray-100 p-2 rounded-md flex flex-col gap-4 "
+                      >
+                        <div className="flex justify-between">
+                          <span className="flex gap-1 items-center">
+                            <span className="px-1 text-black/70 bg-white rounded-md">
+                              #{index + 1}
+                            </span>
+                            <p className="font-medium text-xl">
+                              {item.item_name}
+                            </p>
+                          </span>
+                          <span className="font-medium">
+                            {formatCurrency(
+                              item.price_per_unit ? item.price_per_unit : 0,
+                            )}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <p>Item Subtotal</p>
+                          <span>
+                            {item.quantity} X {item.price_per_unit} ={" "}
+                            {formatCurrency(formulaTotalAmount(item))}
+                          </span>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
                 <Button
                   onClick={(e) => {
                     e.preventDefault();
@@ -101,13 +167,27 @@ const TransactionSaleForm = (props: TransactionSaleFormProps) => {
                   <IoMdAddCircle />
                   Add Items
                 </Button>
+                {items.length > 0 && (
+                  <div className="bg-gray-100 p-2 rounded-md flex justify-between gap-4">
+                    <span className="font-semibold">Total Amount</span>
+                    <span className="font-semibold">
+                      {formatCurrency(calculateTotalAmount(items))}
+                    </span>
+                  </div>
+                )}
 
-                <Button type="submit">Submit</Button>
+                <Button type="submit" className="mt-auto">
+                  Submit
+                </Button>
               </form>
             </Form>
           </>
         ) : (
-          <TransactionSaleItemAddForm handleClose={handleSecondFormClose} />
+          <TransactionSaleItemAddForm
+            handleClose={handleSecondFormClose}
+            items={items}
+            setItems={setItems}
+          />
         )}
       </DialogContent>
     </Dialog>

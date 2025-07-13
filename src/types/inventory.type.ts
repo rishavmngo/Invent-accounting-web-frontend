@@ -88,3 +88,20 @@ export const ItemStockCreationSchema = ItemStockSchemaBase.omit({
 export type ItemStockCreationT = z.input<typeof ItemStockCreationSchema>;
 
 export type ItemStock = z.infer<typeof ItemStockSchema>;
+
+export const InventoryTransactionSchema = z.object({
+  item_name: z.string(),
+  item_id: z.number().nullable(),
+  quantity: z.preprocess((value) => {
+    if (value == "") return 1;
+    return Number(value);
+  }, z.number().optional()),
+  price_per_unit: z.preprocess((value) => {
+    if (value == "") return undefined;
+    return Number(value);
+  }, z.number().optional()),
+  description: z.string().optional(),
+  discount: z.number().optional().nullable(),
+});
+
+export type InventoryTransactionT = z.infer<typeof InventoryTransactionSchema>;

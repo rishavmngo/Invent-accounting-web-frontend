@@ -2,32 +2,48 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { DialogClose, DialogTitle } from "../ui/dialog";
+import { DialogTitle } from "../ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
 import { FaArrowLeft } from "react-icons/fa6";
+import { suggestion } from "@/api/inventory";
+import {
+  InventoryTransactionSchema,
+  InventoryTransactionT,
+  Item,
+} from "@/types/inventory.type";
+import { Autocomplete } from "../autocomplete/autocompleteInput.component";
+import { Button } from "../ui/button";
 
+async function fetchitemSuggesion(query: string): Promise<Item[]> {
+  const data = await suggestion(query);
+  return data as Item[];
+}
 type TransactionSaleItemAddFormProps = {
   handleClose: () => void;
+  items: InventoryTransactionT[];
+  setItems: React.Dispatch<React.SetStateAction<InventoryTransactionT[]>>;
 };
 const TransactionSaleItemAddForm = ({
   handleClose,
+  items,
+  setItems,
 }: TransactionSaleItemAddFormProps) => {
   const form = useForm({
-    resolver: zodResolver(
-      z.object({
-        item_name: z.string(),
-        quantity: z.number().optional(),
-        price_per_unit: z.number().optional(),
-        description: z.string().optional(),
-        discount: z.number().optional(),
-      }),
-    ),
+    resolver: zodResolver(InventoryTransactionSchema),
     defaultValues: {
       item_name: "",
+      item_id: null,
+      quantity: "",
+      description: "",
+      price_per_unit: "",
     },
   });
+
+  const onSubmit = (item: InventoryTransactionT) => {
+    setItems([...items, item]);
+    handleClose();
+  };
 
   return (
     <>
@@ -39,21 +55,31 @@ const TransactionSaleItemAddForm = ({
       </DialogTitle>
       <Form {...form}>
         <form
-          // onSubmit={form.handleSubmit(onSub)}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-4 h-[600px] overflow-y-auto p-1"
         >
           <FormField
             control={form.control}
             name="item_name"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-[var(--invent-gray)] text-lg">
-                  Item Name
-                </FormLabel>
-                <FormControl>
-                  <Input placeholder="Ex: ram" {...field} value={field.value} />
-                </FormControl>
-              </FormItem>
+              <>
+                <Autocomplete
+                  fetchSuggestionsAction={fetchitemSuggesion}
+                  onSelectAction={(item: Item) => {
+                    field.onChange(item.name);
+                    form.setValue("item_id", item.id);
+                  }}
+                  inputKey="name"
+                  setInpAction={(value) => {
+                    field.onChange(value);
+                  }}
+                  onTypingStart={() => {
+                    form.setValue("item_id", null);
+                  }}
+                  value={field.value as string}
+                  getOptionLabelAction={(item) => <p>{item.name}</p>}
+                />
+              </>
             )}
           />
 
@@ -66,7 +92,11 @@ const TransactionSaleItemAddForm = ({
                   Quantity
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="" {...field} value={field.value} />
+                  <Input
+                    placeholder=""
+                    {...field}
+                    value={field.value as string}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -81,7 +111,11 @@ const TransactionSaleItemAddForm = ({
                   Rate (Price/Unit)
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="" {...field} value={field.value} />
+                  <Input
+                    placeholder=""
+                    {...field}
+                    value={field.value as string}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -101,6 +135,9 @@ const TransactionSaleItemAddForm = ({
               </FormItem>
             )}
           />
+          <Button type="submit" className="">
+            Add
+          </Button>
         </form>
       </Form>
     </>
