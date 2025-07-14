@@ -41,6 +41,9 @@ const TransactionSaleItemAddForm = ({
   });
 
   const onSubmit = (item: InventoryTransactionT) => {
+    item.quantity = item.quantity == undefined ? 1 : item.quantity;
+    item.price_per_unit =
+      item.price_per_unit == undefined ? 1 : item.price_per_unit;
     setItems([...items, item]);
     handleClose();
   };

@@ -15,6 +15,9 @@ import { Party } from "@/types/party.type";
 import { saleFormBaseSchema, saleFormBaseT } from "@/types/transaction.type";
 import { InventoryTransactionT } from "@/types/inventory.type";
 import { formatCurrency } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { addSale } from "@/api/transaction";
 
 async function fetchPartySuggesion(query: string): Promise<Party[]> {
   const data = await suggestion(query);
@@ -49,10 +52,12 @@ type TransactionSaleFormProps = {
   toggleOpen: React.Dispatch<SetStateAction<boolean>>;
 };
 const TransactionSaleForm = (props: TransactionSaleFormProps) => {
+  const queryClient = useQueryClient();
   const [formStage, setFormStage] = useState<"saleMain" | "addItem">(
     "saleMain",
   );
   const [items, setItems] = useState<InventoryTransactionT[]>([]);
+  const { ownerId } = useAuth();
   const form = useForm({
     resolver: zodResolver(saleFormBaseSchema),
     defaultValues: {
@@ -68,16 +73,27 @@ const TransactionSaleForm = (props: TransactionSaleFormProps) => {
   const handleSecondFormClose = () => {
     setFormStage("saleMain");
   };
-  console.log("errors", form.formState.errors);
+
+  const mutation = useMutation({
+    mutationFn: addSale,
+    mutationKey: ["transactionData"],
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["transactionData"] });
+    },
+  });
   const onSubmit = (data: saleFormBaseT) => {
     data.total_amount = calculateTotalAmount(items);
 
-    console.log(data);
-    console.log(items);
+    // console.log(data);
+    // console.log(items);
+    // console.log(ownerId);
+    const sale = { data: data, items: items, ownerId: ownerId };
+    console.log(sale);
+
+    mutation.mutate(sale);
   };
   return (
     <Dialog open={props.open} onOpenChange={props.toggleOpen}>
-      here
       <DialogContent hideClose={formStage != "saleMain"}>
         {formStage == "saleMain" ? (
           <>
