@@ -7,9 +7,13 @@ import TransactionEntityCard from "./transactionEntityCard.component";
 import { useQuery } from "@tanstack/react-query";
 import { getAllTransaction } from "@/api/transaction";
 import { useAuth } from "@/hooks/useAuth";
+import TransactionSaleUpdateForm from "./transactionSaleUpdateForm.component";
+import { InvoiceGenT } from "@/types/transactionGen.type";
 
 const TransactionHomeMainSection = () => {
   const [isTrxnMenuOpen, toggleTrxnMenu] = useState(false);
+  const [isTrxnUpdateFormOpen, toggleTrxnUpdateForm] = useState(false);
+  const [selectedTrxn, setSelectedTrxn] = useState<InvoiceGenT | null>(null);
 
   const { ownerId } = useAuth();
 
@@ -53,9 +57,20 @@ const TransactionHomeMainSection = () => {
               date={tran.created_at}
               customer_name={tran.customer.name}
               total_amount={tran.total_amount}
+              onClick={() => {
+                setSelectedTrxn(tran);
+                toggleTrxnUpdateForm(true);
+              }}
             />
           ))}
       </ul>
+      {selectedTrxn != null && (
+        <TransactionSaleUpdateForm
+          open={isTrxnUpdateFormOpen}
+          toggleOpen={toggleTrxnUpdateForm}
+          trxn={selectedTrxn}
+        />
+      )}
     </section>
   );
 };

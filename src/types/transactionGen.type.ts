@@ -30,3 +30,13 @@ export const InvoiceSchema = z.object({
 });
 
 export type InvoiceGenT = z.infer<typeof InvoiceSchema>;
+
+export const InvoiceSchemaUpdate = z.object({
+  customer_name: z.string(),
+  customer_id: z.number().nullable(),
+  billing_address: z.string().nullable(),
+  email_address: z.string().email(),
+  contact_number: z.string().nullable(),
+  total_amount: z.number().nullable(),
+  created_at: z.coerce.date().nullable(),
+});
