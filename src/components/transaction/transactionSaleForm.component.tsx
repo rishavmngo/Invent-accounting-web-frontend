@@ -18,6 +18,7 @@ import { formatCurrency } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addSale } from "@/api/transaction";
+import TransactionSaleItemUpdateForm from "./TransactionSaleItemUpdateForm.component";
 
 async function fetchPartySuggesion(query: string): Promise<Party[]> {
   const data = await suggestion(query);
@@ -53,10 +54,11 @@ type TransactionSaleFormProps = {
 };
 const TransactionSaleForm = (props: TransactionSaleFormProps) => {
   const queryClient = useQueryClient();
-  const [formStage, setFormStage] = useState<"saleMain" | "addItem">(
-    "saleMain",
-  );
+  const [formStage, setFormStage] = useState<
+    "saleMain" | "addItem" | "updateItem"
+  >("saleMain");
   const [items, setItems] = useState<InventoryTransactionT[]>([]);
+  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const { ownerId } = useAuth();
   const form = useForm({
     resolver: zodResolver(saleFormBaseSchema),
@@ -84,9 +86,6 @@ const TransactionSaleForm = (props: TransactionSaleFormProps) => {
   const onSubmit = (data: saleFormBaseT) => {
     data.total_amount = calculateTotalAmount(items);
 
-    // console.log(data);
-    // console.log(items);
-    // console.log(ownerId);
     const sale = { data: data, items: items, ownerId: ownerId };
     console.log(sale);
 
@@ -95,7 +94,7 @@ const TransactionSaleForm = (props: TransactionSaleFormProps) => {
   return (
     <Dialog open={props.open} onOpenChange={props.toggleOpen}>
       <DialogContent hideClose={formStage != "saleMain"}>
-        {formStage == "saleMain" ? (
+        {formStage == "saleMain" && (
           <>
             <DialogTitle className="text-2xl font-medium">Sale</DialogTitle>
             <Form {...form}>
@@ -108,6 +107,9 @@ const TransactionSaleForm = (props: TransactionSaleFormProps) => {
                   name="customer_name"
                   render={({ field }) => (
                     <>
+                      <FormLabel className="text-[var(--invent-gray)] text-lg">
+                        Customer name
+                      </FormLabel>
                       <Autocomplete
                         fetchSuggestionsAction={fetchPartySuggesion}
                         onSelectAction={(party: Party) => {
@@ -146,6 +148,10 @@ const TransactionSaleForm = (props: TransactionSaleFormProps) => {
                     return (
                       <li
                         key={index + " " + item.item_id}
+                        onClick={() => {
+                          setCurrentIndex(index);
+                          setFormStage("updateItem");
+                        }}
                         className="bg-gray-100 p-2 rounded-md flex flex-col gap-4 "
                       >
                         <div className="flex justify-between">
@@ -198,8 +204,19 @@ const TransactionSaleForm = (props: TransactionSaleFormProps) => {
               </form>
             </Form>
           </>
-        ) : (
+        )}
+
+        {formStage == "addItem" && (
           <TransactionSaleItemAddForm
+            handleClose={handleSecondFormClose}
+            items={items}
+            setItems={setItems}
+          />
+        )}
+
+        {formStage == "updateItem" && (
+          <TransactionSaleItemUpdateForm
+            itemIndex={currentIndex}
             handleClose={handleSecondFormClose}
             items={items}
             setItems={setItems}
