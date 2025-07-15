@@ -66,7 +66,6 @@ const InventoryStockAddForm = ({
         predicate: (query) =>
           query.queryKey.includes("ItemCardData") ||
           query.queryKey.includes("ItemStockCardData"),
-        // queryKey: [""],
       });
     },
   });
@@ -81,11 +80,9 @@ const InventoryStockAddForm = ({
     }
     // values.as_of_date = new Date(values.as_of_date)
     values.item_id = itemId;
-    console.log("typeof", typeof values.as_of_date);
-    console.log(values);
     mutation.mutate({ ...values });
+    setOpen(false);
   }
-  console.log(form.formState.errors);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="">
