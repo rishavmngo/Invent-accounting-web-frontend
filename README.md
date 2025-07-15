@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🧾 Invent — Inventory & Transaction Management System
 
-## Getting Started
+**Invent** is a full-stack web application designed to help small to medium-sized businesses manage their **parties**, **inventory**, and **sales transactions** efficiently. It also allows users to **generate invoices in PDF format**, with plans for full GST compliance and advanced accounting features in the future.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+<img src="screenshots/1.png" alt="auth-screen"/>
+<img src="screenshots/2.png" alt="auth-screen"/>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- ✅ Manage customers (parties) and inventory
+- ✅ Record and track sales transactions
+- ✅ Generate clean PDF invoices using Puppeteer
+- ✅ Secure authentication with JWT (Passport.js)
+- ✅ Schema validation with Zod
+- ✅ Responsive and clean UI with TailwindCSS and shadcn/ui
+- 🛠️ Future features planned:
+  - GST compatibility
+  - Import/export data via CSV
+  - Multiple invoice templates
+  - Sale orders, purchases, and purchase orders
+  - Internal ledger for tracking every transaction
+  - Multi-user support and role-based permissions
+  - Balance sheet generation
+  - Upload and customize business logos
+  - google authentication
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Sample invoice
 
-To learn more about Next.js, take a look at the following resources:
+<img src="screenshots/invoice.png" alt="auth-screen"/>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🧑‍💻 Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Frontend
 
-## Deploy on Vercel
+- **Framework:** [Next.js](https://nextjs.org/) (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS + shadcn/ui
+- **State Management:** Redux Toolkit (Authentication only)
+- **Validation:** Zod
+- **Data Fetching:** TanStack Query
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Backend
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Server:** Express.js (TypeScript)
+- **Auth:** Passport.js (JWT Strategy)
+- **Database:** PostgreSQL (Raw SQL, no ORM)
+- **PDF Generation:** Puppeteer
+- **Validation:** Zod
+
+#### Sale design plan screenshot
+
+<img src="screenshots/6.png" alt="auth-screen"/>
+
+### More screenshots of app
+
+<img src="screenshots/3.png" alt="auth-screen"/>
+<img src="screenshots/4.png" alt="auth-screen"/>
+<img src="screenshots/5.png" alt="auth-screen"/>

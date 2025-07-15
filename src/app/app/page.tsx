@@ -1,3 +1,7 @@
+"use client";
+import { useAuth } from "@/hooks/useAuth";
+
 export default function App() {
-  return <div>App</div>;
+  const { user } = useAuth();
+  return <div>{user?.name}&apos;s dashboard</div>;
 }

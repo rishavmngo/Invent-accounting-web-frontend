@@ -34,9 +34,9 @@ const Page = () => {
   };
 
   return (
-    <div className="inline-flex flex-col gap-8 flex-wrap">
+    <div className="inline-flex flex-col gap-8 flex-wrap ">
       <h1 className="text-[var(--invent-gray)] font-md text-2xl">Parties</h1>
-      <ul className="flex flex-col gap-10 ">
+      <ul className="flex flex-col gap-10 h-[540px] overflow-y-auto px-2">
         {isLoading &&
           Array.from({ length: 2 }).map((_, i) => (
             <SkeletonPartyEntityCard key={i} />
