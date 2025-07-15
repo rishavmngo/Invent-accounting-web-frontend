@@ -147,7 +147,7 @@ const TransactionSaleUpdateForm = ({
               </div>
               <div>
                 <button
-                  className="flex gap-2 items-center hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md"
+                  className="flex gap-2 items-center bg-gray-700 text-white px-3 hover:bg-gray-800 py-2 rounded-md"
                   onClick={() => handleDownload()}
                 >
                   <FaFileDownload /> invoice
