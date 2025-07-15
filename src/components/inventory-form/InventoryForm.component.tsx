@@ -82,6 +82,7 @@ const InventoryForm = ({ open, setOpen }: InventoryFormProps) => {
       return;
     }
     mutation.mutate({ ...values, user_id: ownerId });
+    setOpen(false);
   }
 
   return (
