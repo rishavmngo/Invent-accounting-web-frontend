@@ -1,5 +1,5 @@
 "use client";
-import React, { SetStateAction, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 import { Dialog, DialogContent } from "../ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
@@ -71,6 +71,9 @@ const TransactionSaleForm = (props: TransactionSaleFormProps) => {
       contact_number: "",
     },
   });
+  useEffect(() => {
+    form.reset();
+  }, []);
 
   const handleSecondFormClose = () => {
     setFormStage("saleMain");
@@ -83,6 +86,11 @@ const TransactionSaleForm = (props: TransactionSaleFormProps) => {
       queryClient.invalidateQueries({ queryKey: ["transactionData"] });
     },
   });
+  const handleClose = (open: boolean) => {
+    form.reset();
+    setItems([]);
+    props.toggleOpen(open);
+  };
   const onSubmit = (data: saleFormBaseT) => {
     data.total_amount = calculateTotalAmount(items);
 
@@ -90,9 +98,11 @@ const TransactionSaleForm = (props: TransactionSaleFormProps) => {
     console.log(sale);
 
     mutation.mutate(sale);
+    handleClose(false);
   };
+
   return (
-    <Dialog open={props.open} onOpenChange={props.toggleOpen}>
+    <Dialog open={props.open} onOpenChange={handleClose}>
       <DialogContent hideClose={formStage != "saleMain"}>
         {formStage == "saleMain" && (
           <>
