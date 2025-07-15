@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { FaMoneyBills } from "react-icons/fa6";
 import Image from "next/image";
@@ -10,6 +10,16 @@ import { cn, IsPageActive } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useSidebar } from "./invent-sidebar.context";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { CiLogout } from "react-icons/ci";
 
 const sidebarItems = [
   {
@@ -42,6 +52,8 @@ const sidebarItems = [
 const InventSidebar = () => {
   const { shrinked } = useSidebar();
   const pathname = usePathname();
+  const { user, logoutUser } = useAuth();
+  const [isMenuOpen, toggleMenu] = useState(true);
   return (
     <div
       className={cn(
@@ -72,25 +84,47 @@ const InventSidebar = () => {
         ))}
       </ul>
 
-      <div className="flex gap-4  items-center  border-green-500 text-[var(--invent-gray)] mt-auto h-8">
-        <Avatar>
-          <AvatarImage
-            src="https://i.pinimg.com/736x/15/ed/1b/15ed1bdb5985993fd31ef3b507d45e30.jpg"
-            alt="@shadcn"
-          />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
-
-        {!shrinked && (
-          <span
-            className={cn(
-              "capitalize text-xl font-medium group-hover:text-gray-50",
-            )}
+      <DropdownMenu open={isMenuOpen} onOpenChange={toggleMenu} modal={true}>
+        <DropdownMenuTrigger asChild>
+          <button
+            onClick={() => {
+              toggleMenu(!isMenuOpen);
+            }}
+            className="flex gap-4  items-center  border-green-500 text-[var(--invent-gray)] mt-auto h-8"
           >
-            {"rishav raj"}
-          </span>
-        )}
-      </div>
+            <Avatar>
+              <AvatarImage
+                src="https://i.pinimg.com/736x/15/ed/1b/15ed1bdb5985993fd31ef3b507d45e30.jpg"
+                alt="@shadcn"
+              />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+
+            {!shrinked && (
+              <span
+                className={cn(
+                  "capitalize text-xl font-medium group-hover:text-gray-50",
+                )}
+              >
+                {user && user.name}
+              </span>
+            )}
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="" align="start">
+          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              className="flex gap-2"
+              onClick={() => {
+                logoutUser();
+              }}
+            >
+              <CiLogout /> Logout
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };
