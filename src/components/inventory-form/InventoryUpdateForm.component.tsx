@@ -85,9 +85,6 @@ const InventoryUpdateForm = ({
     },
   });
   function onSubmit(values: ItemUpdateForm) {
-    console.log("submitted!!!!");
-    console.log(values);
-
     if (!ownerId) {
       console.log("owner id missing");
       return;
@@ -97,6 +94,7 @@ const InventoryUpdateForm = ({
       user_id: ownerId,
       id: id,
     });
+    setOpen(false);
   }
 
   return (

@@ -35,7 +35,6 @@ const InventoryDetailsPage = ({ itemId }: InventoryDetailsPageProps) => {
 
   const itemid = Number(itemId);
 
-  console.log(ownerId, itemid);
   const { data } = useQuery({
     queryKey: ["ItemCardData", ownerId, itemid],
     queryFn: () => {
