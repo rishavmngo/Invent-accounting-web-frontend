@@ -116,13 +116,19 @@ const TransactionSaleUpdateForm = ({
       queryClient.invalidateQueries({ queryKey: ["transactionData"] });
     },
   });
+
+  const handleClose = (open: boolean) => {
+    form.reset();
+    // if (!open) setItems([]);
+    toggleOpen(open);
+  };
   const onSubmit = (data: InvoiceGenT) => {
     data.total_amount = calculateTotalAmount(items);
 
     const sale = { data: data, items: items, ownerId: ownerId };
     console.log(sale);
 
-    mutation.mutate(sale);
+    // mutation.mutate(sale);
   };
   const handleDownload = async () => {
     toggleDownloadComplete(false);
@@ -137,7 +143,7 @@ const TransactionSaleUpdateForm = ({
     }
   };
   return (
-    <Dialog open={open} onOpenChange={toggleOpen}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent hideClose={formStage != "saleMain"}>
         {formStage == "saleMain" && (
           <>

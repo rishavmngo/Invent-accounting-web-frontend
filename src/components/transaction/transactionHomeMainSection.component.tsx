@@ -48,7 +48,7 @@ const TransactionHomeMainSection = () => {
         />
       </section>
 
-      <ul className="mt-4 flex flex-col gap-4">
+      <ul className="mt-4 flex flex-col gap-4 p-2 h-[540px] overflow-y-auto">
         {transactions &&
           transactions.map((tran) => (
             <TransactionEntityCard
