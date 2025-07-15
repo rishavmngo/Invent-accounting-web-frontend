@@ -4,7 +4,7 @@ import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { FaMoneyBills } from "react-icons/fa6";
 import Image from "next/image";
 import { LuBoxes } from "react-icons/lu";
-import { FaUsers } from "react-icons/fa";
+import { FaCog, FaUsers } from "react-icons/fa";
 import SidebarItem from "./invent-sidebar-item";
 import { cn, IsPageActive } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { CiLogout } from "react-icons/ci";
+import SettingMain from "../settings/settingsMain.component";
 
 const sidebarItems = [
   {
@@ -53,7 +54,8 @@ const InventSidebar = () => {
   const { shrinked } = useSidebar();
   const pathname = usePathname();
   const { user, logoutUser } = useAuth();
-  const [isMenuOpen, toggleMenu] = useState(true);
+  const [isMenuOpen, toggleMenu] = useState(false);
+  const [isSettingDialogOpen, toggleSettingDialog] = useState(false);
   return (
     <div
       className={cn(
@@ -84,7 +86,7 @@ const InventSidebar = () => {
         ))}
       </ul>
 
-      <DropdownMenu open={isMenuOpen} onOpenChange={toggleMenu} modal={true}>
+      <DropdownMenu open={isMenuOpen} onOpenChange={toggleMenu}>
         <DropdownMenuTrigger asChild>
           <button
             onClick={() => {
@@ -117,6 +119,17 @@ const InventSidebar = () => {
             <DropdownMenuItem
               className="flex gap-2"
               onClick={() => {
+                setTimeout(() => {
+                  toggleSettingDialog(true);
+                }, 0);
+              }}
+            >
+              <FaCog />
+              settings
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="flex gap-2"
+              onClick={() => {
                 logoutUser();
               }}
             >
@@ -125,6 +138,7 @@ const InventSidebar = () => {
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
+      <SettingMain open={isSettingDialogOpen} setOpen={toggleSettingDialog} />
     </div>
   );
 };
