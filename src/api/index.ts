@@ -2,7 +2,11 @@ import { store } from "@/state/store";
 
 const API_BASE_URL = "http://localhost:5000";
 
-export const apiClient = async (endpoint: string, options = {}) => {
+export const apiClient = async (
+  endpoint: string,
+  options = {},
+  raw?: boolean,
+) => {
   const token = store.getState().auth.token;
 
   const defaultOptions = {
@@ -21,6 +25,7 @@ export const apiClient = async (endpoint: string, options = {}) => {
     const error = await response.json();
     throw new Error(error.message || "API request failed");
   }
+  if (raw) return response;
 
   return response.json();
 };

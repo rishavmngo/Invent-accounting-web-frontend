@@ -16,13 +16,15 @@ import { InventoryTransactionT } from "@/types/inventory.type";
 import { formatCurrency } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addSale } from "@/api/transaction";
+import { addSale, downloadInvoice } from "@/api/transaction";
 import TransactionSaleItemUpdateForm from "./TransactionSaleItemUpdateForm.component";
 import {
   InvoiceGenT,
   InvoiceSchemaUpdate,
   ItemGenT,
 } from "@/types/transactionGen.type";
+import { FaFileDownload } from "react-icons/fa";
+import { LoadingSpinner } from "../loading-spinner.component";
 
 async function fetchPartySuggesion(query: string): Promise<Party[]> {
   const data = await suggestion(query);
@@ -80,6 +82,7 @@ const TransactionSaleUpdateForm = ({
   >("saleMain");
 
   const [items, setItems] = useState<InventoryTransactionT[]>([]);
+  const [isDownloadComplete, toggleDownloadComplete] = useState<boolean>(true);
 
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const { ownerId } = useAuth();
@@ -121,13 +124,36 @@ const TransactionSaleUpdateForm = ({
 
     mutation.mutate(sale);
   };
+  const handleDownload = async () => {
+    toggleDownloadComplete(false);
+
+    if (!ownerId) return;
+
+    try {
+      await downloadInvoice({ ownerId: ownerId, invoiceId: trxn.id });
+      toggleDownloadComplete(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <Dialog open={open} onOpenChange={toggleOpen}>
       <DialogContent hideClose={formStage != "saleMain"}>
         {formStage == "saleMain" && (
           <>
-            <DialogTitle className="text-2xl font-medium">
-              Update Sale
+            <DialogTitle className="flex justify-between mr-8">
+              <div>
+                <p className="text-2xl font-medium">Update Sale</p>
+              </div>
+              <div>
+                <button
+                  className="flex gap-2 items-center hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md"
+                  onClick={() => handleDownload()}
+                >
+                  <FaFileDownload /> invoice
+                  {!isDownloadComplete && <LoadingSpinner />}
+                </button>
+              </div>
             </DialogTitle>
             <Form {...form}>
               <form
