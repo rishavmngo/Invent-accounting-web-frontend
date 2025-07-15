@@ -73,14 +73,12 @@ const PartyForm = ({ open, setOpen }: PartyFormProps) => {
     },
   });
   function onSubmit(values: PartyFormT) {
-    console.log("submitted!!!!");
-    console.log(values);
-
     if (!ownerId) {
       console.log("owner id missing");
       return;
     }
     mutation.mutate({ ...values, user_id: ownerId });
+    setOpen(false);
   }
 
   return (
