@@ -31,6 +31,7 @@
 ## Sample invoice
 
 <img src="screenshots/invoice.png" alt="auth-screen"/>
+<img src="screenshots/7.png" alt="invoice-selector"/>
 
 ## 🧑‍💻 Tech Stack
 
@@ -57,6 +58,7 @@
 
 ### More screenshots of app
 
+<img src="screenshots/8.png" alt="invoice-selector"/>
 <img src="screenshots/3.png" alt="auth-screen"/>
 <img src="screenshots/4.png" alt="auth-screen"/>
 <img src="screenshots/5.png" alt="auth-screen"/>
