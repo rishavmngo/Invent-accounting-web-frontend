@@ -97,7 +97,7 @@ const SettingMain = ({ open, setOpen }: SettingMainProps) => {
               <div
                 className={currentSection === "invoice" ? "block" : "hidden"}
               >
-                <SettingsInvoice />
+                {settings && <SettingsInvoice settings={settings} />}
               </div>
             </main>
           </div>
