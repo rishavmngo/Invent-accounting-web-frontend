@@ -25,7 +25,7 @@ export const downloadInvoice = async ({
   invoiceId: number;
 }) => {
   const response = await apiClient(
-    "/invoice/generate",
+    "/setting/template/generate",
     {
       method: "POST",
       body: JSON.stringify({ user_id: ownerId, invoice_id: invoiceId }),

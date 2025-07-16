@@ -41,5 +41,5 @@ export const getAllTemplates = async () => {
 export const update = async (setting: SettingsT) =>
   apiClient("/setting/update", {
     method: "POST",
-    body: setting,
+    body: JSON.stringify(setting),
   });

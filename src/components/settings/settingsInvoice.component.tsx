@@ -20,15 +20,23 @@ const SettingsInvoice = ({ settings }: SettingsInvoiceProps) => {
     queryFn: getAllTemplates,
     queryKey: ["templates"],
   });
-  console.log(isPreviewDialogOpen);
-  // const queryClient = useQueryClient();
-  // const mutation = useMutation({
-  //   mutationFn: update,
-  //   mutationKey: ["settings"],
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: ["settings"] });
-  //   },
-  // });
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: update,
+    mutationKey: ["settings"],
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["settings"] });
+    },
+  });
+
+  const handleSubmit = () => {
+    if (!selectedTemplate) return;
+    const newSettings = settings;
+    newSettings.template_id = selectedTemplate.id;
+
+    mutation.mutate(newSettings);
+  };
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       {templates?.map((template) => (
@@ -77,7 +85,13 @@ const SettingsInvoice = ({ settings }: SettingsInvoiceProps) => {
                 sizes="(max-width: 768px) 100vw, 350px"
               />
 
-              <Button disabled={settings.template_id === selectedTemplate.id}>
+              <Button
+                disabled={settings.template_id === selectedTemplate.id}
+                onClick={() => {
+                  handleSubmit();
+                  togglePreviewDialog(false);
+                }}
+              >
                 {settings.template_id !== selectedTemplate.id
                   ? "Make it default"
                   : "Your default template"}
