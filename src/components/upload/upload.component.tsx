@@ -9,11 +9,13 @@ import { Camera } from "lucide-react";
 import Image from "next/image";
 import { uploadLogo } from "@/api/settings";
 import { useQueryClient } from "@tanstack/react-query";
+import { SettingsT } from "@/types/settings.type";
 
 type UploadProps = {
   onUploaded?: (url: string) => void;
   ownerId: number;
   url?: string | null;
+  setting: SettingsT;
 };
 const imageSchema = z
   .instanceof(File)
