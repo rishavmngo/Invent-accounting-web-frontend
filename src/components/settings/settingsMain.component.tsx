@@ -4,13 +4,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import React, { useState } from "react";
 import SettingsAccount from "./settingsAccount.component";
 import SettingsInvoice from "./settingsInvoice.component";
+import { useAuth } from "@/hooks/useAuth";
+import { getByOwnerId } from "@/api/settings";
+import { useQuery } from "@tanstack/react-query";
 
 type SettingMainProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-type settingSectionItemT = "account" | "invoice" | "plans" | "others";
+type settingSectionItemT = "account" | "invoice" | "roles" | "others";
 // const SettingItem = () => {};
 type SettingSectionT = {
   id: settingSectionItemT;
@@ -28,8 +31,8 @@ const SettingSections: SettingSectionT[] = [
     name: "Invoice",
   },
   {
-    id: "plans",
-    name: "Plans",
+    id: "roles",
+    name: "Roles",
   },
   {
     id: "others",
@@ -40,10 +43,19 @@ const SettingSections: SettingSectionT[] = [
 const SettingMain = ({ open, setOpen }: SettingMainProps) => {
   const [currentSection, setCurrentSection] =
     useState<settingSectionItemT>("account");
+  const { ownerId } = useAuth();
+
+  const { data: settings, isLoading } = useQuery({
+    queryFn: () => getByOwnerId(ownerId!),
+    queryKey: ["settings", ownerId],
+    enabled: !!ownerId,
+  });
+  console.log("settings", settings);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
-        className="w-[40vw] sm:max-w-full h-[60vh] p-0 overflow-hidden
+        className="w-[750px] sm:max-w-full h-[60vh] p-0 overflow-hidden
     fixed top-1/2 left-1/2 -translate-y-1/2"
       >
         <div className="flex flex-col h-full">
@@ -71,9 +83,19 @@ const SettingMain = ({ open, setOpen }: SettingMainProps) => {
               </ul>
             </aside>
 
-            <main className="flex-1 p-6 overflow-y-auto">
-              {currentSection === "account" && <SettingsAccount />}
-              {currentSection === "invoice" && <SettingsInvoice />}
+            <main className="flex-1 p-6 h-[490px] overflow-y-auto">
+              <div
+                className={currentSection === "account" ? "block" : "hidden"}
+              >
+                {ownerId && (
+                  <SettingsAccount ownerId={ownerId} url={settings?.logo_url} />
+                )}
+              </div>
+              <div
+                className={currentSection === "invoice" ? "block" : "hidden"}
+              >
+                <SettingsInvoice />
+              </div>
             </main>
           </div>
         </div>

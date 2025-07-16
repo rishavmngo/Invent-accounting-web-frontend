@@ -1,13 +1,17 @@
 import React from "react";
-type SettingsAccountProps = {};
+import Upload from "../upload/upload.component";
+import AccountForm from "../settings-forms/AccountForm.component";
+type SettingsAccountProps = {
+  ownerId: number;
+  url?: string | null;
+};
 
 const SettingsAccount = (props: SettingsAccountProps) => {
   return (
-    <div>
-      <p className="text-sm text-muted-foreground">
-        Your account content goes here.
-      </p>
-    </div>
+    <>
+      <Upload ownerId={props.ownerId} url={props.url} />
+      <AccountForm />
+    </>
   );
 };
 
