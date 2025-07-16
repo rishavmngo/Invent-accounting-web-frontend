@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { Camera } from "lucide-react";
 import Image from "next/image";
+import { uploadLogo } from "@/api/settings";
+import { useQueryClient } from "@tanstack/react-query";
 
 const imageSchema = z
   .instanceof(File)
@@ -27,6 +29,7 @@ export default function Upload({
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (url) setPreview("http://localhost:5000" + url);
@@ -46,7 +49,6 @@ export default function Upload({
     setPreview(URL.createObjectURL(selected));
   };
 
-  console.log("preview", preview);
   const handleUpload = async () => {
     if (!file) return;
 
@@ -56,19 +58,10 @@ export default function Upload({
 
     setUploading(true);
     try {
-      const res = await fetch("http://localhost:5000/setting/upload-logo", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await uploadLogo(formData);
 
-      const data = await res.json();
-      if (res.ok) {
-        onUploaded?.(data.url); // `url` will be used to store in DB
-      } else {
-        alert(data.error || "Upload failed");
-      }
-    } catch (err) {
-      console.error(err);
+      queryClient.invalidateQueries({ queryKey: ["settings"] });
+      console.log(res);
     } finally {
       setUploading(false);
     }

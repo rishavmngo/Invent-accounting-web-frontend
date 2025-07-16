@@ -1,5 +1,5 @@
 import { SettingsT } from "@/types/settings.type";
-import { apiClient, ApiResponse } from ".";
+import { apiClient, apiClientFormData, ApiResponse } from ".";
 
 export const getByOwnerId = async (userId: number) => {
   try {
@@ -16,3 +16,9 @@ export const getByOwnerId = async (userId: number) => {
     return null;
   }
 };
+
+export const uploadLogo = async (formData: FormData) =>
+  apiClientFormData("/setting/upload-logo", {
+    method: "POST",
+    body: formData,
+  });

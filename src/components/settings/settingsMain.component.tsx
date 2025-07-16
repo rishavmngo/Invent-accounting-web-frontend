@@ -50,7 +50,6 @@ const SettingMain = ({ open, setOpen }: SettingMainProps) => {
     queryKey: ["settings", ownerId],
     enabled: !!ownerId,
   });
-  console.log("settings", settings);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
