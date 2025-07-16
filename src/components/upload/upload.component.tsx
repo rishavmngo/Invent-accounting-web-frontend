@@ -10,21 +10,18 @@ import Image from "next/image";
 import { uploadLogo } from "@/api/settings";
 import { useQueryClient } from "@tanstack/react-query";
 
+type UploadProps = {
+  onUploaded?: (url: string) => void;
+  ownerId: number;
+  url?: string | null;
+};
 const imageSchema = z
   .instanceof(File)
   .refine((file) => file.type.startsWith("image/"), {
     message: "File must be an image",
   });
 
-export default function Upload({
-  onUploaded,
-  ownerId,
-  url,
-}: {
-  onUploaded?: (url: string) => void;
-  ownerId: number;
-  url?: string | null;
-}) {
+export default function Upload({ onUploaded, ownerId, url }: UploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);

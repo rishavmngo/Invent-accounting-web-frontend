@@ -86,8 +86,12 @@ const SettingMain = ({ open, setOpen }: SettingMainProps) => {
               <div
                 className={currentSection === "account" ? "block" : "hidden"}
               >
-                {ownerId && (
-                  <SettingsAccount ownerId={ownerId} url={settings?.logo_url} />
+                {ownerId && settings && (
+                  <SettingsAccount
+                    settings={settings}
+                    ownerId={ownerId}
+                    url={settings?.logo_url}
+                  />
                 )}
               </div>
               <div

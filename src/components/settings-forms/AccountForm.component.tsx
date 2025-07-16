@@ -1,6 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import {
@@ -12,8 +12,13 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { SettingsT } from "@/types/settings.type";
 
-const AccountForm = () => {
+type AccountFormProps = {
+  settings: SettingsT;
+};
+
+const AccountForm = ({ settings }: AccountFormProps) => {
   const form = useForm({
     resolver: zodResolver(
       z.object({
@@ -25,13 +30,25 @@ const AccountForm = () => {
     ),
     defaultValues: {
       name: "",
+      contact_number: "",
+      address: "",
+      website: "",
     },
   });
+
+  useEffect(() => {
+    form.reset({
+      name: settings.name ? settings.name : "",
+      contact_number: settings.contact_number ? settings.contact_number : "",
+      address: settings.address ? settings.address : "",
+      website: settings.website ? settings.website : "",
+    });
+  }, [settings]);
 
   return (
     <div>
       <Form {...form}>
-        <form className="">
+        <form className="flex flex-col gap-4">
           <FormField
             control={form.control}
             name="name"
