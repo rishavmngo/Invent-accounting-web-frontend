@@ -10,6 +10,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { getAllPartyCardData } from "@/api/parties";
 import SkeletonPartyEntityCard from "@/components/entity-card-party/SkeletonPartyEntityCard.component";
+import Image from "next/image";
+import { Handshake, HandshakeIcon } from "lucide-react";
 
 const Page = () => {
   const [isPartyFormOpen, togglePartyForm] = useState(false);
@@ -36,13 +38,13 @@ const Page = () => {
   return (
     <div className="inline-flex flex-col gap-8 flex-wrap ">
       <h1 className="text-[var(--invent-gray)] font-md text-2xl">Parties</h1>
-      <ul className="flex flex-col gap-10 h-[540px] overflow-y-auto px-2">
+      <ul className="flex flex-col gap-10 max-h-[540px] overflow-y-auto px-2">
         {isLoading &&
           Array.from({ length: 2 }).map((_, i) => (
             <SkeletonPartyEntityCard key={i} />
           ))}
-        {!isLoading &&
-          parties?.map((party) => {
+        {!isLoading && parties && parties.length > 0 ? (
+          parties.map((party) => {
             return (
               <PartyEntityCard
                 key={party.id}
@@ -55,7 +57,13 @@ const Page = () => {
                 lastTrade={"2024-04-12T10:34:23.000Z"}
               />
             );
-          })}
+          })
+        ) : (
+          <div className="flex flex-col items-center">
+            <HandshakeIcon className="text-red-200" size={"100px"} />
+            <p className="text-gray-200">No party yet!</p>
+          </div>
+        )}
       </ul>
       <Button
         tabIndex={3}
