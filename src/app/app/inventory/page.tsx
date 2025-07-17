@@ -9,6 +9,7 @@ import InventoryEntityCard from "@/components/entity-card-inventory/InventoryEnt
 import { getAllItemsCardData } from "@/api/inventory";
 import SkeletonInventoryEntityCard from "@/components/entity-card-inventory/SkeletonInventoryEntityCard.component";
 import InventoryForm from "@/components/inventory-form/InventoryForm.component";
+import Image from "next/image";
 
 const Page = () => {
   const [isInventoryFormOpen, toggleInventoryForm] = useState(false);
@@ -39,7 +40,7 @@ const Page = () => {
           Array.from({ length: 2 }).map((_, i) => (
             <SkeletonInventoryEntityCard key={i} />
           ))}
-        {!isLoading &&
+        {!isLoading && items && items.length > 0 ? (
           items?.map((item) => {
             return (
               <InventoryEntityCard
@@ -50,7 +51,21 @@ const Page = () => {
                 sell_price={item.sale_price}
               />
             );
-          })}
+          })
+        ) : (
+          <div className="flex flex-col items-center">
+            <Image
+              src="/box.svg"
+              className="opacity-50"
+              alt="box-empty"
+              width={98}
+              height={140}
+            />
+            <p className="text-gray-200">Empty!</p>
+          </div>
+        )}
+
+        {/* {(!items || items.length < 1) && } */}
       </ul>
       <Button
         tabIndex={3}
