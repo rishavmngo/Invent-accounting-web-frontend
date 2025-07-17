@@ -18,6 +18,7 @@ import Image from "next/image";
 import { FaGoogle } from "react-icons/fa";
 import Link from "next/link";
 import { RegisterUserSchema } from "@/types/user.type";
+import { useAuth } from "@/hooks/useAuth";
 
 // const CredentialsSchema = z.object({
 //   email: z.string().email("Invalid email format"),
@@ -29,6 +30,7 @@ import { RegisterUserSchema } from "@/types/user.type";
 // });
 
 const RegistrationForm = () => {
+  const { registerUser } = useAuth();
   const form = useForm<z.infer<typeof RegisterUserSchema>>({
     resolver: zodResolver(RegisterUserSchema),
     defaultValues: {
@@ -40,6 +42,16 @@ const RegistrationForm = () => {
   });
   function onSubmit(values: z.infer<typeof RegisterUserSchema>) {
     console.log(values);
+    if (values.confirmPassword != values.password) {
+      console.error("password did't match");
+      alert("password did't match");
+      return;
+    }
+    registerUser({
+      fullName: values.fullName,
+      email: values.email,
+      password: values.password,
+    });
   }
   return (
     <section className="px-10 w-full flex flex-col">
@@ -89,7 +101,7 @@ const RegistrationForm = () => {
                   Email
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="ram@gmail.com" {...field} />
+                  <Input placeholder="xyz@gmail.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

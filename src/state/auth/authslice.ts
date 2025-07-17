@@ -96,22 +96,28 @@ const signup = createAsyncThunk<
   RegisterUser,
   { rejectValue: string }
 >("auth/signup", async (credentials, { rejectWithValue }) => {
+  const user = {
+    name: credentials.fullName,
+    email: credentials.email,
+    password: credentials.password,
+  };
   try {
-    const response = await fetch(`${API_URL}/signup`, {
+    const response = await fetch(`${API_URL}/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(credentials),
+      body: JSON.stringify(user),
     });
 
     if (!response.ok) {
-      return rejectWithValue("Login failed");
+      return rejectWithValue("registration failed");
     }
 
     const data = await response.json();
 
     localStorage.setItem("token", data.data.token);
+    console.log("token set", data.data.token);
 
     return data;
   } catch (error) {
@@ -154,10 +160,11 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(signup.fulfilled, (state, action) => {
+        console.log(action, state);
         state.isLoading = false;
         state.isAuthenticated = true;
         state.user = action.payload.user;
-        state.ownerId = action.payload.user.id;
+        // state.ownerId = action.payload.user.id;
         state.token = action.payload.token;
       })
       .addCase(signup.rejected, (state, action) => {

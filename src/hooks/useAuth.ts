@@ -29,6 +29,7 @@ export const useAuth = () => {
     async (userData: RegisterUser) => {
       try {
         await dispatch(signup(userData)).unwrap();
+        console.log("before pushing /app", token);
         router.push("/app");
         return true;
       } catch (err) {

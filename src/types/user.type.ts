@@ -22,7 +22,10 @@ export const RegisterUserSchema = UserSchema.pick({
     .min(8, "Password must contain at least 8 characters"),
 });
 
-export type RegisterUser = Omit<z.infer<typeof RegisterUserSchema>, "password">;
+export type RegisterUser = Omit<
+  z.infer<typeof RegisterUserSchema>,
+  "confirmPassword"
+>;
 
 export const LoginUserSchema = UserSchema.pick({
   email: true,

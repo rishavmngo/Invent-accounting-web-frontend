@@ -69,7 +69,7 @@ const LoginForm = (props: LoginFormPropsType) => {
                   Email
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="ram@gmail.com" {...field} />
+                  <Input placeholder="xyz@invent.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
