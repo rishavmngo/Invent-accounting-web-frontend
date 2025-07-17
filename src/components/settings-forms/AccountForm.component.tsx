@@ -13,21 +13,25 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { SettingsT } from "@/types/settings.type";
+import { Button } from "../ui/button";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { update } from "@/api/settings";
+import { LoadingSpinner } from "../loading-spinner.component";
 
 type AccountFormProps = {
   settings: SettingsT;
 };
 
+const AccountDetailSchema = z.object({
+  name: z.string().optional(),
+  contact_number: z.string().optional(),
+  address: z.string().optional(),
+  website: z.string().optional(),
+});
+
 const AccountForm = ({ settings }: AccountFormProps) => {
   const form = useForm({
-    resolver: zodResolver(
-      z.object({
-        name: z.string().optional(),
-        contact_number: z.string().optional(),
-        address: z.string().optional(),
-        website: z.string().optional(),
-      }),
-    ),
+    resolver: zodResolver(AccountDetailSchema),
     defaultValues: {
       name: "",
       contact_number: "",
@@ -45,10 +49,41 @@ const AccountForm = ({ settings }: AccountFormProps) => {
     });
   }, [settings]);
 
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: update,
+    mutationKey: ["settings"],
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["settings"] });
+    },
+  });
+  const handleSubmit = (data: z.infer<typeof AccountDetailSchema>) => {
+    const newSettings = settings;
+    newSettings.name = data.name ? data.name : null;
+    newSettings.contact_number = data.contact_number
+      ? data.contact_number
+      : null;
+    newSettings.address = data.address ? data.address : null;
+    newSettings.website = data.website ? data.website : null;
+
+    mutation.mutate(newSettings);
+  };
+
   return (
-    <div>
+    <div className="mt-4">
       <Form {...form}>
-        <form className="flex flex-col gap-4">
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className="flex flex-col gap-4"
+        >
+          <Button
+            className="self-end"
+            disabled={!form.formState.isDirty || mutation.isSuccess}
+            type="submit"
+          >
+            Save changes
+            {mutation.isPending && <LoadingSpinner />}
+          </Button>
           <FormField
             control={form.control}
             name="name"
